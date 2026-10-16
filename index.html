@@ -6,232 +6,100 @@
 <title>Lịch Bản — Vạn Niên Lịch Cổ Truyền</title>
 <style>
   :root{
-    --nen: #1a0f0a;
-    --nen2: #2b1810;
-    --tho: #c9a227;
-    --tho2: #e8c547;
-    --do: #8b1e1e;
-    --do2: #b52d2d;
-    --xanh: #1e5b4f;
-    --xanh2: #2d7a68;
-    --chu: #f4e4c1;
-    --chu2: #d4b896;
-    --vien: #4a2c1a;
+    --nen:#1a0f0a;--nen2:#2b1810;--tho:#c9a227;--tho2:#e8c547;
+    --do:#8b1e1e;--do2:#b52d2d;--xanh:#1e5b4f;--xanh2:#2d7a68;
+    --chu:#f4e4c1;--chu2:#d4b896;--vien:#4a2c1a;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family: 'Segoe UI', 'Noto Sans', system-ui, sans-serif;
-    background: var(--nen);
-    color: var(--chu);
-    min-height: 100vh;
-    background-image:
-      radial-gradient(circle at 20% 10%, rgba(201,162,39,0.08) 0%, transparent 40%),
-      radial-gradient(circle at 80% 90%, rgba(139,30,30,0.10) 0%, transparent 40%);
-  }
-  header{
-    text-align:center;
-    padding: 22px 12px 14px;
-    border-bottom: 2px solid var(--tho);
-    background: linear-gradient(180deg, var(--nen2), var(--nen));
-    position: relative;
-  }
-  header::after{
-    content:'';
-    position:absolute;bottom:-2px;left:0;right:0;height:2px;
-    background: repeating-linear-gradient(90deg, var(--tho) 0 12px, transparent 12px 20px);
-  }
-  h1{
-    font-size: 1.9rem;
-    letter-spacing: 6px;
-    color: var(--tho2);
-    text-shadow: 0 0 14px rgba(232,197,71,0.4);
-    font-weight: 600;
-  }
-  header p{
-    font-size: 0.8rem;
-    color: var(--chu2);
-    letter-spacing: 3px;
-    margin-top: 4px;
-  }
-
-  .toolbar{
-    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
-    padding: 14px 10px;
-    background: var(--nen2);
-    border-bottom: 1px solid var(--vien);
-  }
-  .toolbar button{
-    background: var(--nen);
-    color: var(--chu2);
-    border: 1px solid var(--vien);
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor:pointer;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    transition: all .2s;
-  }
-  .toolbar button:hover{ border-color: var(--tho); color: var(--tho2); }
-  .toolbar button.active{
-    background: var(--do);
-    color: var(--chu);
-    border-color: var(--tho);
-    box-shadow: 0 0 10px rgba(201,162,39,0.3);
-  }
-  .nav-info{
-    display:flex;align-items:center;justify-content:center;gap:14px;
-    padding: 12px;font-size:1.05rem;color:var(--tho2);
-    letter-spacing: 1px;
-  }
-  .nav-info button{
-    background:transparent;border:1px solid var(--vien);color:var(--tho2);
-    width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;
-  }
-  .nav-info button:hover{ background: var(--vien); }
-
-  .wrap{ max-width: 1100px; margin: 0 auto; padding: 0 10px 60px; }
-
-  /* Lưới lịch */
-  .weekdays{
-    display:grid;grid-template-columns:repeat(7,1fr);
-    gap:4px;margin: 10px 0 4px;
-  }
-  .weekdays div{
-    text-align:center;font-size:0.78rem;color:var(--tho);
-    padding:6px 0;letter-spacing:1px;
-    border-bottom:1px solid var(--vien);
-  }
-  .weekdays div.cn{ color: var(--do2); }
-
-  .grid{
-    display:grid;grid-template-columns:repeat(7,1fr);gap:4px;
-  }
-  .cell{
-    min-height: 92px;
-    background: linear-gradient(160deg, var(--nen2), var(--nen));
-    border: 1px solid var(--vien);
-    border-radius: 6px;
-    padding: 5px 6px;
-    cursor:pointer;
-    position:relative;
-    transition: all .15s;
-    display:flex;flex-direction:column;
-    overflow:hidden;
-  }
-  .cell:hover{
-    border-color: var(--tho);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.5);
-  }
-  .cell.empty{ background: transparent; border:1px dashed rgba(74,44,26,0.4); cursor:default; }
-  .cell.empty:hover{ transform:none; box-shadow:none; }
-  .cell.today{ border-color: var(--tho2); box-shadow: inset 0 0 0 1px var(--tho2); }
-  .cell.selected{ background: linear-gradient(160deg, #3d2415, #2b1810); border-color: var(--tho2); }
-
-  .duong{
-    font-size: 1.05rem; font-weight:600; color: var(--chu);
-    display:flex; justify-content:space-between; align-items:baseline;
-  }
-  .duong .thang{ font-size:0.62rem; color: var(--chu2); font-weight:400; }
-  .cell.cn .duong{ color: var(--do2); }
-  .am{
-    font-size:0.68rem; color: var(--tho); margin-top:1px;
-  }
-  .canchi{
-    font-size:0.6rem; color: var(--chu2); margin-top:1px;
-  }
-  .saotag{
-    margin-top:auto;
-    font-size:0.62rem;
-    padding:1px 4px;
-    border-radius:3px;
-    display:inline-block;
-    align-self:flex-start;
-    font-weight:600;
-    letter-spacing:0.5px;
-  }
-  .ld-daiAN{ background:#1e5b4f; color:#d4f5e8; }
-  .ld-luuLIEN{ background:#5b4a1e; color:#f5e8d4; }
-  .ld-tocHY{ background:#1e4a5b; color:#d4eef5; }
-  .ld-xichKHAU{ background:#8b1e1e; color:#ffd4d4; }
-  .ld-tieuCAT{ background:#2d7a68; color:#e0fff5; }
-  .ld-khongVONG{ background:#3a2a2a; color:#d4c4c4; }
-
-  .star-dot{
-    position:absolute;top:4px;right:5px;
-    display:flex;gap:2px;
-  }
-  .star-dot span{
-    width:5px;height:5px;border-radius:50%;
-  }
-  .dot-good{ background: var(--tho2); box-shadow:0 0 4px var(--tho2); }
-  .dot-bad{ background: var(--do2); box-shadow:0 0 4px var(--do2); }
-
-  /* Panel chi tiết */
-  .panel{
-    margin-top: 20px;
-    background: linear-gradient(160deg, var(--nen2), var(--nen));
-    border: 1px solid var(--tho);
-    border-radius: 10px;
-    padding: 18px;
-    display:none;
-  }
-  .panel.show{ display:block; animation: fadeIn .3s; }
-  @keyframes fadeIn{ from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
-  .panel-head{
-    display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;
-    border-bottom:1px solid var(--vien);padding-bottom:10px;margin-bottom:14px;gap:8px;
-  }
-  .panel-head h2{ font-size:1.25rem;color:var(--tho2);letter-spacing:2px; }
-  .panel-head .sub{ font-size:0.8rem;color:var(--chu2); }
-
-  .info-grid{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:10px;margin-bottom:14px;
-  }
-  .info-box{
-    background: rgba(0,0,0,0.25);
-    border:1px solid var(--vien);
-    border-radius:6px;padding:9px 11px;
-  }
-  .info-box .lbl{ font-size:0.68rem;color:var(--chu2);letter-spacing:1px;margin-bottom:3px; }
-  .info-box .val{ font-size:0.95rem;color:var(--chu);font-weight:600; }
-
-  .section-title{
-    font-size:0.82rem;color:var(--tho);letter-spacing:2px;
-    margin:14px 0 8px;padding-bottom:4px;
-    border-bottom:1px dashed var(--vien);
-  }
-  .badges{ display:flex;flex-wrap:wrap;gap:6px; }
-  .badge{
-    font-size:0.72rem;padding:3px 9px;border-radius:12px;
-    border:1px solid;
-  }
-  .badge.good{ background:rgba(30,91,79,0.3);border-color:var(--xanh2);color:#a8e6d4; }
-  .badge.bad{ background:rgba(139,30,30,0.3);border-color:var(--do2);color:#f5b8b8; }
-  .badge.neutral{ background:rgba(74,44,26,0.4);border-color:var(--vien);color:var(--chu2); }
-
-  .thai-box{
-    background: rgba(139,30,30,0.15);
-    border-left: 3px solid var(--do2);
-    padding: 10px 14px;border-radius: 0 6px 6px 0;
-    margin-top:8px;
-  }
-  .thai-box .pos{ color:#f5b8b8;font-weight:700;font-size:1rem; }
-  .thai-box .desc{ font-size:0.78rem;color:var(--chu2);margin-top:4px;line-height:1.5; }
-
-  footer{
-    text-align:center;padding:18px;font-size:0.72rem;
-    color:var(--vien);letter-spacing:1px;
-    border-top:1px solid var(--vien);margin-top:20px;
-  }
-
+  body{font-family:'Segoe UI','Noto Sans',system-ui,sans-serif;background:var(--nen);color:var(--chu);min-height:100vh;
+    background-image:radial-gradient(circle at 20% 10%,rgba(201,162,39,.08) 0%,transparent 40%),
+                     radial-gradient(circle at 80% 90%,rgba(139,30,30,.10) 0%,transparent 40%);}
+  header{text-align:center;padding:22px 12px 14px;border-bottom:2px solid var(--tho);
+    background:linear-gradient(180deg,var(--nen2),var(--nen));position:relative;}
+  header::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;
+    background:repeating-linear-gradient(90deg,var(--tho) 0 12px,transparent 12px 20px);}
+  h1{font-size:1.9rem;letter-spacing:6px;color:var(--tho2);
+    text-shadow:0 0 14px rgba(232,197,71,.4);font-weight:600;}
+  header p{font-size:.8rem;color:var(--chu2);letter-spacing:3px;margin-top:4px;}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px 10px;
+    background:var(--nen2);border-bottom:1px solid var(--vien);}
+  .toolbar button{background:var(--nen);color:var(--chu2);border:1px solid var(--vien);
+    padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.85rem;letter-spacing:1px;transition:all .2s;}
+  .toolbar button:hover{border-color:var(--tho);color:var(--tho2);}
+  .toolbar button.active{background:var(--do);color:var(--chu);border-color:var(--tho);
+    box-shadow:0 0 10px rgba(201,162,39,.3);}
+  .nav-info{display:flex;align-items:center;justify-content:center;gap:14px;padding:12px;
+    font-size:1.05rem;color:var(--tho2);letter-spacing:1px;flex-wrap:wrap;}
+  .nav-info button{background:transparent;border:1px solid var(--vien);color:var(--tho2);
+    width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;}
+  .nav-info button:hover{background:var(--vien);}
+  #btnToday{width:auto!important;border-radius:6px!important;padding:0 12px;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 10px 60px;}
+  .weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0 4px;}
+  .weekdays div{text-align:center;font-size:.78rem;color:var(--tho);padding:6px 0;
+    letter-spacing:1px;border-bottom:1px solid var(--vien);}
+  .weekdays div.cn{color:var(--do2);}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cell{min-height:92px;background:linear-gradient(160deg,var(--nen2),var(--nen));
+    border:1px solid var(--vien);border-radius:6px;padding:5px 6px;cursor:pointer;
+    position:relative;transition:all .15s;display:flex;flex-direction:column;overflow:hidden;}
+  .cell:hover{border-color:var(--tho);transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.5);}
+  .cell.empty{background:transparent;border:1px dashed rgba(74,44,26,.4);cursor:default;}
+  .cell.empty:hover{transform:none;box-shadow:none;}
+  .cell.today{border-color:var(--tho2);box-shadow:inset 0 0 0 1px var(--tho2);}
+  .cell.selected{background:linear-gradient(160deg,#3d2415,#2b1810);border-color:var(--tho2);}
+  .duong{font-size:1.05rem;font-weight:600;color:var(--chu);display:flex;
+    justify-content:space-between;align-items:baseline;}
+  .duong .thang{font-size:.62rem;color:var(--chu2);font-weight:400;}
+  .cell.cn .duong{color:var(--do2);}
+  .am{font-size:.68rem;color:var(--tho);margin-top:1px;}
+  .canchi{font-size:.6rem;color:var(--chu2);margin-top:1px;}
+  .saotag{margin-top:auto;font-size:.62rem;padding:1px 4px;border-radius:3px;
+    display:inline-block;align-self:flex-start;font-weight:600;letter-spacing:.5px;}
+  .ld-daiAN{background:#1e5b4f;color:#d4f5e8;}
+  .ld-luuLIEN{background:#5b4a1e;color:#f5e8d4;}
+  .ld-tocHY{background:#1e4a5b;color:#d4eef5;}
+  .ld-xichKHAU{background:#8b1e1e;color:#ffd4d4;}
+  .ld-tieuCAT{background:#2d7a68;color:#e0fff5;}
+  .ld-khongVONG{background:#3a2a2a;color:#d4c4c4;}
+  .star-dot{position:absolute;top:4px;right:5px;display:flex;gap:2px;}
+  .star-dot span{width:5px;height:5px;border-radius:50%;}
+  .dot-good{background:var(--tho2);box-shadow:0 0 4px var(--tho2);}
+  .dot-bad{background:var(--do2);box-shadow:0 0 4px var(--do2);}
+  .panel{margin-top:20px;background:linear-gradient(160deg,var(--nen2),var(--nen));
+    border:1px solid var(--tho);border-radius:10px;padding:18px;display:none;}
+  .panel.show{display:block;animation:fadeIn .3s;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--vien);padding-bottom:10px;margin-bottom:14px;gap:8px;}
+  .panel-head h2{font-size:1.25rem;color:var(--tho2);letter-spacing:2px;}
+  .panel-head .sub{font-size:.8rem;color:var(--chu2);}
+  .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;margin-bottom:14px;}
+  .info-box{background:rgba(0,0,0,.25);border:1px solid var(--vien);border-radius:6px;padding:9px 11px;}
+  .info-box .lbl{font-size:.68rem;color:var(--chu2);letter-spacing:1px;margin-bottom:3px;}
+  .info-box .val{font-size:.95rem;color:var(--chu);font-weight:600;}
+  .section-title{font-size:.82rem;color:var(--tho);letter-spacing:2px;margin:14px 0 8px;
+    padding-bottom:4px;border-bottom:1px dashed var(--vien);}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;}
+  .badge{font-size:.72rem;padding:3px 9px;border-radius:12px;border:1px solid;}
+  .badge.good{background:rgba(30,91,79,.3);border-color:var(--xanh2);color:#a8e6d4;}
+  .badge.bad{background:rgba(139,30,30,.3);border-color:var(--do2);color:#f5b8b8;}
+  .badge.neutral{background:rgba(74,44,26,.4);border-color:var(--vien);color:var(--chu2);}
+  .thai-box{background:rgba(139,30,30,.15);border-left:3px solid var(--do2);
+    padding:10px 14px;border-radius:0 6px 6px 0;margin-top:8px;}
+  .thai-box .pos{color:#f5b8b8;font-weight:700;font-size:1rem;}
+  .thai-box .desc{font-size:.78rem;color:var(--chu2);margin-top:4px;line-height:1.5;}
+  footer{text-align:center;padding:18px;font-size:.72rem;color:var(--vien);
+    letter-spacing:1px;border-top:1px solid var(--vien);margin-top:20px;}
+  .err{color:#f5b8b8;background:rgba(139,30,30,.3);border:1px solid var(--do2);
+    padding:10px;border-radius:6px;margin:10px 0;font-size:.85rem;}
   @media(max-width:560px){
-    .cell{ min-height:76px;padding:4px; }
-    .duong{ font-size:0.9rem; }
-    .am{ font-size:0.6rem; }
-    .canchi{ display:none; }
-    h1{ font-size:1.4rem;letter-spacing:3px; }
+    .cell{min-height:76px;padding:4px;}
+    .duong{font-size:.9rem;}
+    .am{font-size:.6rem;}
+    .canchi{display:none;}
+    h1{font-size:1.4rem;letter-spacing:3px;}
   }
 </style>
 </head>
@@ -253,25 +121,24 @@
     <button id="btnPrev">‹</button>
     <span id="navLabel">—</span>
     <button id="btnNext">›</button>
-    <button id="btnToday" style="width:auto;border-radius:6px;padding:0 12px;height:34px;">Hôm nay</button>
+    <button id="btnToday">Hôm nay</button>
   </div>
-
+  <div id="errBox"></div>
   <div class="weekdays" id="weekdays"></div>
   <div class="grid" id="grid"></div>
-
   <div class="panel" id="panel"></div>
 </div>
 
 <footer>LỊCH BẢN · Thuật toán Ngọc Hạp Thông Thư · Chạy tĩnh trên GitHub Pages</footer>
 
 <script>
-/* =========================================================
-   1. DỮ LIỆU ÂM LỊCH (1900 - 2100)
-   Bảng nén chuẩn: mỗi năm 1 số nguyên 20-bit
-   bit 0-3  : số ngày tháng nhuận (0 = không nhuận, 29/30)
-   bit 4-15 : 12 bit tháng, 1 = 30 ngày, 0 = 29 ngày
-   bit 16-19: tháng nhuận (0 = không)
-   ========================================================= */
+/* =====================================================================
+   BẢNG DỮ LIỆU ÂM LỊCH 1900–2100 (201 phần tử)
+   Mỗi số nguyên 20-bit mô tả 1 năm âm lịch:
+     bit 16-19 : tháng nhuận (0 = không nhuận)
+     bit 15-4  : 12 bit, mỗi bit là 1 tháng, 1=30 ngày, 0=29 ngày
+     bit 3-0   : số ngày tháng nhuận (0 = không nhuận)
+   ===================================================================== */
 const LUNAR_INFO = [
 0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
 0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
@@ -298,184 +165,57 @@ const LUNAR_INFO = [
 
 const CAN = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
 const CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-const CHI_EN = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
 
 const LUC_DIEU = ["Đại An","Lưu Liên","Tốc Hỷ","Xích Khẩu","Tiểu Cát","Không Vong"];
 const LUC_DIEU_KEY = ["daiAN","luuLIEN","tocHY","xichKHAU","tieuCAT","khongVONG"];
 
-/* Lục Diệu mùng 1 mỗi tháng âm lịch (chỉ số trong LUC_DIEU)
-   Tháng 1,7 -> Tốc Hỷ (2)
-   Tháng 2,8 -> Lưu Liên (1)
-   Tháng 3,9 -> Tiểu Cát (4)
-   Tháng 4,10 -> Không Vong (5)
-   Tháng 5,11 -> Đại An (0)
-   Tháng 6,12 -> Xích Khẩu (3) */
+/* Lục Diệu mùng 1 mỗi tháng âm (chỉ số trong LUC_DIEU)
+   T1,T7 -> Tốc Hỷ (2)
+   T2,T8 -> Lưu Liên (1)
+   T3,T9 -> Tiểu Cát (4)
+   T4,T10 -> Không Vong (5)
+   T5,T11 -> Đại An (0)
+   T6,T12 -> Xích Khẩu (3) */
 const LUC_DIEU_MUNG1 = [2,1,4,5,0,3,2,1,4,5,0,3];
 
-/* ============ THẦN SÁT THEO THÁNG (ĐỊA CHI THÁNG) ============ */
-/* Địa chi tháng âm: tháng 1 = Dần, 2 = Mão, ... 11 = Tý, 12 = Sửu */
-function monthChiIndex(lunarMonth){
-  // lunarMonth 1..12 -> chi index 2..11,0,1
-  return (lunarMonth + 1) % 12;
-}
-
-/* Bảng Yếu Yên: theo địa chi tháng -> địa chi ngày */
-const YEU_YEN = {2:3,3:2,4:8,5:0,6:1,7:10,8:9,9:2,10:1,11:8,0:0,1:10};
-/* Địa chi tháng Dần(2)->Mão(3), Mão(3)->Dần(2), Thìn(4)->Thân(8), Tỵ(5)->Tý(0),
-   Ngọ(6)->Sửu(1), Mùi(7)->Tuất(10), Thân(8)->Dậu(9), Dậu(9)->Thân(8),
-   Tuất(10)->Mão(2), Hợi(11)->Dần(1?) -- cần chuẩn lại
-   Bảng chuẩn Ngọc Hạp:
-   Dần-Thân: Mão(3), Mão-Dậu: Dần(2), Thìn-Tuất: Thân(8), Tỵ-Hợi: Tý(0),
-   Ngọ-Tý: Sửu(1), Mùi-Sửu: Tuất(10)
-*/
-function getYeuYen(mChi){
-  // mChi là địa chi tháng (0-11)
-  const map = {
-    2:3, 8:3,   // Dần, Thân -> Mão
-    3:2, 9:2,   // Mão, Dậu -> Dần
-    4:8, 10:8,  // Thìn, Tuất -> Thân
-    5:0, 11:0,  // Tỵ, Hợi -> Tý
-    6:1, 0:1,   // Ngọ, Tý -> Sửu
-    7:10, 1:10  // Mùi, Sửu -> Tuất
-  };
-  return map[mChi];
-}
-
-/* Phúc Sinh: Dần-Thân -> Dậu(9), Mão-Dậu -> Thân(8), Thìn-Tuất -> Mão(3),
-   Tỵ-Hợi -> Dần(2), Ngọ-Tý -> Mùi(7), Mùi-Sửu -> Ngọ(6) */
-function getPhucSinh(mChi){
-  const map = {
-    2:9, 8:9,
-    3:8, 9:8,
-    4:3, 10:3,
-    5:2, 11:2,
-    6:7, 0:7,
-    7:6, 1:6
-  };
-  return map[mChi];
-}
-
-/* Sát Chủ: theo MÙA
-   Xuân (Dần Mão Thìn) -> Tý(0)
-   Hạ (Tỵ Ngọ Mùi) -> Mão(3)
-   Thu (Thân Dậu Tuất) -> Ngọ(6)
-   Đông (Hợi Tý Sửu) -> Dậu(9) */
-function getSatChu(mChi){
-  if(mChi>=2 && mChi<=4) return 0;   // Tý
-  if(mChi>=5 && mChi<=7) return 3;   // Mão
-  if(mChi>=8 && mChi<=10) return 6;  // Ngọ
-  return 9;                          // Dậu
-}
-
-/* Hoang Vu: theo MÙA
-   Xuân -> Tỵ(5), Hạ -> Thân(8), Thu -> Hợi(11), Đông -> Dần(2) */
-function getHoangVu(mChi){
-  if(mChi>=2 && mChi<=4) return 5;
-  if(mChi>=5 && mChi<=7) return 8;
-  if(mChi>=8 && mChi<=10) return 11;
-  return 2;
-}
-
-/* Phá Luật: Dần-Thân -> Hợi(11), Mão-Dậu -> Tý(0), Thìn-Tuất -> Sửu(1),
-   Tỵ-Hợi -> Dần(2), Ngọ-Tý -> Mão(3), Mùi-Sửu -> Thìn(4) */
-function getPhaLuat(mChi){
-  const map = {
-    2:11, 8:11,
-    3:0, 9:0,
-    4:1, 10:1,
-    5:2, 11:2,
-    6:3, 0:3,
-    7:4, 1:4
-  };
-  return map[mChi];
-}
-
-/* Tam Tang: theo MÙA
-   Xuân -> Thìn(4), Hạ -> Mùi(7), Thu -> Tuất(10), Đông -> Sửu(1) */
-function getTamTang(mChi){
-  if(mChi>=2 && mChi<=4) return 4;
-  if(mChi>=5 && mChi<=7) return 7;
-  if(mChi>=8 && mChi<=10) return 10;
-  return 1;
-}
-
-/* ============ THAI THẦN ============ */
-/* 4 vị trí: Môn Kê, Trù Táo, Thê Xa, Môn Hộ
-   Chu kỳ 12 ngày theo Can Chi (dùng chỉ số ngày trong 60 hoa giáp) */
-const THAI_POSITIONS = [
-  {name:"Môn Kê", huong:"Đông Nam", desc:"Cửa chuồng gà / khu vực gia cầm. Kiêng đục tường, động thổ, xê dịch đồ vật ở hướng Đông Nam."},
-  {name:"Trù Táo", huong:"Đông", desc:"Bếp / khu vực nấu ăn. Kiêng sửa bếp, thay bếp, đụng chạm đồ bếp hướng Đông."},
-  {name:"Thê Xa", huong:"Tây", desc:"Xe cộ / chuồng trại / sân. Kiêng sửa xe, dời xe, đào bới hướng Tây."},
-  {name:"Môn Hộ", huong:"Nam", desc:"Cửa chính / cửa ra vào. Kiêng thay cửa, sửa cửa, đóng đinh hướng Nam."}
-];
-
-function getThaiThan(dayCanChiIndex){
-  // dayCanChiIndex: 0..59 (Giáp Tý -> Quý Hợi)
-  // Chu kỳ 12: vị trí = dayCanChiIndex mod 4 theo bảng 60 ngày
-  // Bảng chuẩn: Giáp Tý -> Môn Kê(0), Ất Sửu -> Trù Táo(1),
-  // Bính Dần -> Thê Xa(2), Đinh Mão -> Môn Hộ(3),
-  // Mậu Thìn -> Môn Kê(0), Kỷ Tỵ -> Trù Táo(1), ...
-  // Nhưng chu kỳ thực tế theo 12 ngày: Môn Kê, Trù Táo, Thê Xa, Môn Hộ, lặp lại
-  // Nhưng theo Can Chi 60 ngày thì vị trí = (dayCanChiIndex mod 12) mod 4? 
-  // Theo bảng chuẩn, 12 ngày đầu: 0->0,1->1,2->2,3->3,4->0,5->1,6->2,7->3,8->0,9->1,10->2,11->3
-  // Tức vị trí = dayCanChiIndex mod 4, nhưng kiểm tra ngày 12 (Nhâm Thân): 12 mod 4 = 0 -> Môn Kê
-  // Bảng chuẩn: Nhâm Thân -> Môn Kê. Đúng.
-  // Ngày 13 (Quý Dậu): 13 mod 4 = 1 -> Trù Táo. Bảng chuẩn: Quý Dậu -> Trù Táo. Đúng.
-  return dayCanChiIndex % 4;
-}
-
-/* ============ CHUYỂN ĐỔI ÂM DƯƠNG LỊCH ============ */
+/* ============== ÂM DƯƠNG LỊCH ============== */
 function jdFromDate(dd, mm, yy){
   const a = Math.floor((14 - mm) / 12);
   const y = yy + 4800 - a;
   const m = mm + 12 * a - 3;
-  let jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-  if(jd < 2299161) jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - 32083;
+  let jd = dd + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
+  if(jd < 2299161) jd = dd + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - 32083;
   return jd;
 }
 function jdToDate(jd){
-  let a, b, c, d, e, m;
+  let a,b,c,d,e,m;
   if(jd > 2299160){
     a = jd + 32044;
-    b = Math.floor((4 * a + 3) / 146097);
-    c = a - Math.floor((146097 * b) / 4);
-  } else {
-    b = 0;
-    c = jd + 32082;
-  }
-  d = Math.floor((4 * c + 3) / 1461);
-  e = c - Math.floor((1461 * d) / 4);
-  m = Math.floor((5 * e + 2) / 153);
-  const day = e - Math.floor((153 * m + 2) / 5) + 1;
-  const month = m + 3 - 12 * Math.floor(m / 10);
-  const year = 100 * b + d - 4800 + Math.floor(m / 10);
+    b = Math.floor((4*a+3)/146097);
+    c = a - Math.floor((146097*b)/4);
+  } else { b=0; c=jd+32082; }
+  d = Math.floor((4*c+3)/1461);
+  e = c - Math.floor((1461*d)/4);
+  m = Math.floor((5*e+2)/153);
+  const day = e - Math.floor((153*m+2)/5) + 1;
+  const month = m + 3 - 12*Math.floor(m/10);
+  const year = 100*b + d - 4800 + Math.floor(m/10);
   return [day, month, year];
 }
+function getLeapMonth(yy){ return LUNAR_INFO[yy-1900] & 0xf; }
+function getLeapMonthDays(yy){ return getLeapMonth(yy) ? ((LUNAR_INFO[yy-1900] & 0x10000) ? 30 : 29) : 0; }
+function getLunarMonthDays(yy, mm){ return (LUNAR_INFO[yy-1900] & (0x10000 >> mm)) ? 30 : 29; }
 function getLunarYearDays(yy){
   let sum = 348;
-  for(let i = 0x8000; i > 0x8; i >>= 1){
-    sum += (LUNAR_INFO[yy - 1900] & i) ? 1 : 0;
-  }
+  for(let i=0x8000;i>0x8;i>>=1) sum += (LUNAR_INFO[yy-1900] & i) ? 1 : 0;
   return sum + getLeapMonthDays(yy);
 }
-function getLeapMonth(yy){
-  return LUNAR_INFO[yy - 1900] & 0xf;
-}
-function getLeapMonthDays(yy){
-  if(getLeapMonth(yy)){
-    return (LUNAR_INFO[yy - 1900] & 0x10000) ? 30 : 29;
-  }
-  return 0;
-}
-function getLunarMonthDays(yy, mm){
-  return (LUNAR_INFO[yy - 1900] & (0x10000 >> mm)) ? 30 : 29;
-}
 
-/* Chuyển dương -> âm */
 function solarToLunar(dd, mm, yy){
+  if(yy < 1900 || yy > 2100) return {day:dd, month:mm, year:yy, isLeap:false, outOfRange:true};
   let offset = jdFromDate(dd, mm, yy) - jdFromDate(31, 1, 1900);
   let i, temp = 0;
-  for(i = 1900; i < 2101 && offset > 0; i++){
+  for(i=1900; i<2101 && offset>0; i++){
     temp = getLunarYearDays(i);
     offset -= temp;
   }
@@ -483,228 +223,206 @@ function solarToLunar(dd, mm, yy){
   const lunarYear = i;
   const leap = getLeapMonth(i);
   let isLeap = false;
-  for(i = 1; i < 13 && offset > 0; i++){
-    if(leap > 0 && i === leap + 1 && !isLeap){
+  for(i=1; i<13 && offset>0; i++){
+    if(leap>0 && i===leap+1 && !isLeap){
       --i; isLeap = true;
       temp = getLeapMonthDays(lunarYear);
     } else {
       temp = getLunarMonthDays(lunarYear, i);
     }
-    if(isLeap && i === leap + 1) isLeap = false;
+    if(isLeap && i===leap+1) isLeap = false;
     offset -= temp;
   }
-  if(offset === 0 && leap > 0 && i === leap + 1){
-    if(isLeap){ isLeap = false; }
+  if(offset===0 && leap>0 && i===leap+1){
+    if(isLeap) isLeap = false;
     else { isLeap = true; --i; }
   }
   if(offset < 0){ offset += temp; --i; }
-  const lunarMonth = i;
-  const lunarDay = offset + 1;
-  return {day: lunarDay, month: lunarMonth, year: lunarYear, isLeap: isLeap};
+  return {day: offset+1, month: i, year: lunarYear, isLeap: isLeap, outOfRange:false};
 }
 
-/* Chuyển âm -> dương */
-function lunarToSolar(ld, lm, ly, isLeap){
-  let offset = 0;
-  for(let i = 1900; i < ly; i++) offset += getLunarYearDays(i);
-  const leap = getLeapMonth(ly);
-  let added = false;
-  for(let i = 1; i < lm; i++){
-    if(leap > 0 && i === leap + 1 && !added){
-      offset += getLeapMonthDays(ly);
-      added = true;
-    }
-    offset += getLunarMonthDays(ly, i);
-  }
-  if(isLeap && leap === lm) offset += getLunarMonthDays(ly, lm);
-  offset += ld - 1;
-  const jd = jdFromDate(31, 1, 1900) + offset;
-  return jdToDate(jd);
-}
-
-/* ============ CAN CHI ============ */
+/* ============== CAN CHI ============== */
 function getCanChiDay(dd, mm, yy){
   const jd = jdFromDate(dd, mm, yy);
-  const idx = (jd + 9) % 60;
-  return {can: CAN[idx % 10], chi: CHI[idx % 12], idx: idx};
+  const idx = ((jd + 9) % 60 + 60) % 60;
+  return {can: CAN[idx%10], chi: CHI[idx%12], idx: idx};
 }
 function getCanChiYear(ly){
-  const can = CAN[(ly - 4) % 10];
-  const chi = CHI[(ly - 4) % 12];
-  return {can, chi};
+  return {can: CAN[((ly-4)%10+10)%10], chi: CHI[((ly-4)%12+12)%12]};
 }
 function getCanChiMonth(lm, ly){
-  // Tháng 1 âm = Dần. Can tháng theo năm:
-  // Năm Giáp/Kỷ -> tháng 1 Bính Dần
-  // Năm Ất/Canh -> Mậu Dần
-  // Năm Bính/Tân -> Canh Dần
-  // Năm Đinh/Nhâm -> Nhâm Dần
-  // Năm Mậu/Quý -> Giáp Dần
-  const yearCanIdx = (ly - 4) % 10;
-  const baseCan = [2,4,6,8,0][yearCanIdx % 5]; // Bính, Mậu, Canh, Nhâm, Giáp
+  const yearCanIdx = ((ly-4)%10+10)%10;
+  const baseCan = [2,4,6,8,0][yearCanIdx % 5];
   const canIdx = (baseCan + lm - 1) % 10;
-  const chiIdx = (lm + 1) % 12; // tháng 1 -> Dần(2), tháng 2 -> Mão(3)...
+  const chiIdx = (lm + 1) % 12;
   return {can: CAN[canIdx], chi: CHI[chiIdx]};
 }
 
-/* ============ TÍNH LỤC DIỆU ============ */
+/* ============== LỤC DIỆU ============== */
 function getLucDieu(lunarDay, lunarMonth){
-  const m1 = LUC_DIEU_MUNG1[(lunarMonth - 1) % 12];
-  const idx = (m1 + lunarDay - 1) % 6;
+  const m1 = LUC_DIEU_MUNG1[((lunarMonth-1)%12+12)%12];
+  const idx = ((m1 + lunarDay - 1) % 6 + 6) % 6;
   return {name: LUC_DIEU[idx], key: LUC_DIEU_KEY[idx], idx: idx};
 }
 
-/* ============ TÍNH THẦN SÁT ============ */
+/* ============== THẦN SÁT THEO THÁNG ============== */
+/* Địa chi tháng âm: tháng 1 = Dần(2), 2 = Mão(3), ..., 11 = Tý(0), 12 = Sửu(1) */
+function monthChiIndex(lunarMonth){ return (lunarMonth + 1) % 12; }
+
+function getYeuYen(mChi){
+  const map = {2:3,8:3, 3:2,9:2, 4:8,10:8, 5:0,11:0, 6:1,0:1, 7:10,1:10};
+  return map[mChi];
+}
+function getPhucSinh(mChi){
+  const map = {2:9,8:9, 3:8,9:8, 4:3,10:3, 5:2,11:2, 6:7,0:7, 7:6,1:6};
+  return map[mChi];
+}
+function getSatChu(mChi){
+  if(mChi>=2 && mChi<=4) return 0;   // Xuân -> Tý
+  if(mChi>=5 && mChi<=7) return 3;   // Hạ   -> Mão
+  if(mChi>=8 && mChi<=10) return 6;  // Thu  -> Ngọ
+  return 9;                          // Đông -> Dậu
+}
+function getHoangVu(mChi){
+  if(mChi>=2 && mChi<=4) return 5;   // Xuân -> Tỵ
+  if(mChi>=5 && mChi<=7) return 8;   // Hạ   -> Thân
+  if(mChi>=8 && mChi<=10) return 11; // Thu  -> Hợi
+  return 2;                          // Đông -> Dần
+}
+function getPhaLuat(mChi){
+  const map = {2:11,8:11, 3:0,9:0, 4:1,10:1, 5:2,11:2, 6:3,0:3, 7:4,1:4};
+  return map[mChi];
+}
+function getTamTang(mChi){
+  if(mChi>=2 && mChi<=4) return 4;   // Xuân -> Thìn
+  if(mChi>=5 && mChi<=7) return 7;   // Hạ   -> Mùi
+  if(mChi>=8 && mChi<=10) return 10; // Thu  -> Tuất
+  return 1;                          // Đông -> Sửu
+}
+
 function getThanSat(dayChiIdx, monthChiIdx){
-  const good = [];
-  const bad = [];
-  
-  if(dayChiIdx === getYeuYen(monthChiIdx))
-    good.push({name:"Yếu Yên", desc:"Tốt cho hôn nhân, cầu tài"});
-  if(dayChiIdx === getPhucSinh(monthChiIdx))
-    good.push({name:"Phúc Sinh", desc:"Tốt cho cầu phúc, tế tự"});
-  if(dayChiIdx === getSatChu(monthChiIdx))
-    bad.push({name:"Sát Chủ", desc:"Đại hung, kỵ mọi việc"});
-  if(dayChiIdx === getHoangVu(monthChiIdx))
-    bad.push({name:"Hoang Vu", desc:"Hung, kỵ khai trương, xuất hành"});
-  if(dayChiIdx === getPhaLuat(monthChiIdx))
-    bad.push({name:"Phá Luật", desc:"Hung, kỵ kiện tụng, tranh chấp"});
-  if(dayChiIdx === getTamTang(monthChiIdx))
-    bad.push({name:"Tam Tang", desc:"Đại hung, kỵ mai táng, cưới hỏi"});
-  
+  const good = [], bad = [];
+  if(dayChiIdx === getYeuYen(monthChiIdx)) good.push({name:"Yếu Yên", desc:"Tốt cho hôn nhân, cầu tài"});
+  if(dayChiIdx === getPhucSinh(monthChiIdx)) good.push({name:"Phúc Sinh", desc:"Tốt cho cầu phúc, tế tự"});
+  if(dayChiIdx === getSatChu(monthChiIdx)) bad.push({name:"Sát Chủ", desc:"Đại hung, kỵ mọi việc"});
+  if(dayChiIdx === getHoangVu(monthChiIdx)) bad.push({name:"Hoang Vu", desc:"Hung, kỵ khai trương, xuất hành"});
+  if(dayChiIdx === getPhaLuat(monthChiIdx)) bad.push({name:"Phá Luật", desc:"Hung, kỵ kiện tụng, tranh chấp"});
+  if(dayChiIdx === getTamTang(monthChiIdx)) bad.push({name:"Tam Tang", desc:"Đại hung, kỵ mai táng, cưới hỏi"});
   return {good, bad};
 }
 
-/* ============ STATE & RENDER ============ */
-const today = new Date();
-let view = "month";
-let curYear = today.getFullYear();
-let curMonth = today.getMonth(); // 0-11
-let curDay = today.getDate();
-let selectedSolar = {d: today.getDate(), m: today.getMonth()+1, y: today.getFullYear()};
-
-const WEEKDAYS = ["CN","T2","T3","T4","T5","T6","T7"];
-
-function pad(n){ return n < 10 ? "0"+n : ""+n; }
-
-function renderWeekdays(){
-  const el = document.getElementById("weekdays");
-  el.innerHTML = WEEKDAYS.map((w,i)=>`<div class="${i===0?'cn':''}">${w}</div>`).join("");
+/* ============== THAI THẦN ============== */
+const THAI_POSITIONS = [
+  {name:"Môn Kê", huong:"Đông Nam", desc:"Cửa chuồng gà / khu gia cầm. Kiêng đục tường, động thổ, xê dịch đồ vật hướng Đông Nam."},
+  {name:"Trù Táo", huong:"Đông", desc:"Bếp / khu nấu ăn. Kiêng sửa bếp, thay bếp, đụng chạm đồ bếp hướng Đông."},
+  {name:"Thê Xa", huong:"Tây", desc:"Xe cộ / chuồng trại / sân. Kiêng sửa xe, dời xe, đào bới hướng Tây."},
+  {name:"Môn Hộ", huong:"Nam", desc:"Cửa chính / cửa ra vào. Kiêng thay cửa, sửa cửa, đóng đinh hướng Nam."}
+];
+function getThaiThan(dayCanChiIndex){
+  return ((dayCanChiIndex % 4) + 4) % 4;
 }
 
+/* ============== TỔNG HỢP 1 NGÀY ============== */
 function getDayInfo(d, m, y){
   const lunar = solarToLunar(d, m, y);
   const ccDay = getCanChiDay(d, m, y);
   const ccYear = getCanChiYear(lunar.year);
   const ccMonth = getCanChiMonth(lunar.month, lunar.year);
   const ld = getLucDieu(lunar.day, lunar.month);
-  const monthChiIdx = monthChiIndex(lunar.month);
-  const dayChiIdx = ccDay.idx % 12;
-  const ts = getThanSat(dayChiIdx, monthChiIdx);
+  const mChi = monthChiIndex(lunar.month);
+  const dChi = ccDay.idx % 12;
+  const ts = getThanSat(dChi, mChi);
   const thaiPos = getThaiThan(ccDay.idx);
-  return {solar:{d,m,y}, lunar, ccDay, ccYear, ccMonth, ld, ts, thaiPos, monthChiIdx, dayChiIdx};
+  return {solar:{d,m,y}, lunar, ccDay, ccYear, ccMonth, ld, ts, thaiPos};
+}
+
+/* ============== RENDER ============== */
+const today = new Date();
+let view = "month";
+let curYear = today.getFullYear();
+let curMonth = today.getMonth();
+let curDay = today.getDate();
+let selectedSolar = {d: today.getDate(), m: today.getMonth()+1, y: today.getFullYear()};
+const WEEKDAYS = ["CN","T2","T3","T4","T5","T6","T7"];
+
+function pad(n){ return n<10 ? "0"+n : ""+n; }
+
+function renderWeekdays(){
+  document.getElementById("weekdays").innerHTML =
+    WEEKDAYS.map((w,i)=>`<div class="${i===0?'cn':''}">${w}</div>`).join("");
+}
+
+function cellHtml(d, m, y, minH){
+  const info = getDayInfo(d, m, y);
+  const isToday = (d===today.getDate() && m===today.getMonth()+1 && y===today.getFullYear());
+  const isSel = (d===selectedSolar.d && m===selectedSolar.m && y===selectedSolar.y);
+  const wd = new Date(y, m-1, d).getDay();
+  const ldClass = "ld-" + info.ld.key;
+  const dots = [];
+  if(info.ts.good.length) dots.push('<span class="dot-good"></span>');
+  if(info.ts.bad.length) dots.push('<span class="dot-bad"></span>');
+  const style = minH ? `style="min-height:${minH}px"` : "";
+  return `<div class="cell ${isToday?'today':''} ${isSel?'selected':''} ${wd===0?'cn':''}"
+    data-d="${d}" data-m="${m}" data-y="${y}" ${style}>
+    <div class="duong"><span>${d}</span><span class="thang">/${m}</span></div>
+    <div class="am">ÂL ${info.lunar.day}/${info.lunar.month}${info.lunar.isLeap?'N':''}</div>
+    <div class="canchi">${info.ccDay.can} ${info.ccDay.chi}</div>
+    <span class="saotag ${ldClass}">${info.ld.name}</span>
+    <div class="star-dot">${dots.join("")}</div>
+  </div>`;
+}
+
+function bindCellClicks(){
+  document.querySelectorAll("#grid .cell[data-d]").forEach(c=>{
+    c.addEventListener("click", ()=>{
+      selectedSolar = {d:+c.dataset.d, m:+c.dataset.m, y:+c.dataset.y};
+      render();
+      showPanel(selectedSolar.d, selectedSolar.m, selectedSolar.y);
+    });
+  });
 }
 
 function renderMonth(){
   const grid = document.getElementById("grid");
-  const firstDay = new Date(curYear, curMonth, 1);
-  const startWeekday = firstDay.getDay();
+  grid.style.gridTemplateColumns = "";
+  const firstDay = new Date(curYear, curMonth, 1).getDay();
   const daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
-  
   document.getElementById("navLabel").textContent = `Tháng ${curMonth+1} / ${curYear}`;
-  
   let html = "";
-  for(let i=0;i<startWeekday;i++) html += `<div class="cell empty"></div>`;
-  
-  for(let d=1; d<=daysInMonth; d++){
-    const info = getDayInfo(d, curMonth+1, curYear);
-    const isToday = (d===today.getDate() && curMonth===today.getMonth() && curYear===today.getFullYear());
-    const isSel = (d===selectedSolar.d && curMonth+1===selectedSolar.m && curYear===selectedSolar.y);
-    const wd = new Date(curYear, curMonth, d).getDay();
-    const ldClass = "ld-" + info.ld.key;
-    const dots = [];
-    if(info.ts.good.length) dots.push('<span class="dot-good"></span>');
-    if(info.ts.bad.length) dots.push('<span class="dot-bad"></span>');
-    
-    html += `<div class="cell ${isToday?'today':''} ${isSel?'selected':''} ${wd===0?'cn':''}" data-d="${d}" data-m="${curMonth+1}" data-y="${curYear}">
-      <div class="duong"><span>${d}</span><span class="thang">/${curMonth+1}</span></div>
-      <div class="am">ÂL ${info.lunar.day}/${info.lunar.month}${info.lunar.isLeap?'N':''}</div>
-      <div class="canchi">${info.ccDay.can} ${info.ccDay.chi}</div>
-      <span class="saotag ${ldClass}">${info.ld.name}</span>
-      <div class="star-dot">${dots.join("")}</div>
-    </div>`;
-  }
+  for(let i=0;i<firstDay;i++) html += `<div class="cell empty"></div>`;
+  for(let d=1; d<=daysInMonth; d++) html += cellHtml(d, curMonth+1, curYear);
   grid.innerHTML = html;
-  
-  grid.querySelectorAll(".cell[data-d]").forEach(c=>{
-    c.addEventListener("click", ()=>{
-      selectedSolar = {d:+c.dataset.d, m:+c.dataset.m, y:+c.dataset.y};
-      renderMonth();
-      showPanel(selectedSolar.d, selectedSolar.m, selectedSolar.y);
-    });
-  });
+  bindCellClicks();
 }
 
 function renderWeek(){
   const grid = document.getElementById("grid");
+  grid.style.gridTemplateColumns = "";
   const base = new Date(curYear, curMonth, curDay);
   const start = new Date(base);
-  start.setDate(base.getDate() - base.getDay()); // Chủ nhật đầu tuần
-  
+  start.setDate(base.getDate() - base.getDay());
   const end = new Date(start);
   end.setDate(start.getDate() + 6);
-  
-  document.getElementById("navLabel").textContent = 
+  document.getElementById("navLabel").textContent =
     `${pad(start.getDate())}/${pad(start.getMonth()+1)} — ${pad(end.getDate())}/${pad(end.getMonth()+1)}/${end.getFullYear()}`;
-  
   let html = "";
   for(let i=0;i<7;i++){
     const dt = new Date(start);
     dt.setDate(start.getDate() + i);
-    const d = dt.getDate(), m = dt.getMonth()+1, y = dt.getFullYear();
-    const info = getDayInfo(d, m, y);
-    const isToday = (d===today.getDate() && m===today.getMonth()+1 && y===today.getFullYear());
-    const isSel = (d===selectedSolar.d && m===selectedSolar.m && y===selectedSolar.y);
-    const ldClass = "ld-" + info.ld.key;
-    const dots = [];
-    if(info.ts.good.length) dots.push('<span class="dot-good"></span>');
-    if(info.ts.bad.length) dots.push('<span class="dot-bad"></span>');
-    
-    html += `<div class="cell ${isToday?'today':''} ${isSel?'selected':''} ${dt.getDay()===0?'cn':''}" data-d="${d}" data-m="${m}" data-y="${y}" style="min-height:130px">
-      <div class="duong"><span>${d}</span><span class="thang">T${m}</span></div>
-      <div class="am">ÂL ${info.lunar.day}/${info.lunar.month}</div>
-      <div class="canchi">${info.ccDay.can} ${info.ccDay.chi}</div>
-      <div class="canchi">Tháng ${info.ccMonth.can} ${info.ccMonth.chi}</div>
-      <span class="saotag ${ldClass}" style="margin-top:6px">${info.ld.name}</span>
-      <div class="star-dot">${dots.join("")}</div>
-    </div>`;
+    html += cellHtml(dt.getDate(), dt.getMonth()+1, dt.getFullYear(), 130);
   }
   grid.innerHTML = html;
-  grid.querySelectorAll(".cell[data-d]").forEach(c=>{
-    c.addEventListener("click", ()=>{
-      selectedSolar = {d:+c.dataset.d, m:+c.dataset.m, y:+c.dataset.y};
-      renderWeek();
-      showPanel(selectedSolar.d, selectedSolar.m, selectedSolar.y);
-    });
-  });
+  bindCellClicks();
 }
 
 function renderDay(){
   const grid = document.getElementById("grid");
   grid.style.gridTemplateColumns = "1fr";
-  const d = curDay, m = curMonth+1, y = curYear;
-  const info = getDayInfo(d, m, y);
+  const d=curDay, m=curMonth+1, y=curYear;
   document.getElementById("navLabel").textContent = `${pad(d)}/${pad(m)}/${y}`;
-  const ldClass = "ld-" + info.ld.key;
-  
-  grid.innerHTML = `<div class="cell" style="min-height:200px;cursor:default" data-d="${d}" data-m="${m}" data-y="${y}">
-    <div class="duong" style="font-size:1.6rem"><span>${d}</span><span class="thang">Tháng ${m}/${y}</span></div>
-    <div class="am" style="font-size:1rem;margin-top:6px">Âm lịch: ${info.lunar.day}/${info.lunar.month}${info.lunar.isLeap?' (nhuận)':''} — Năm ${info.ccYear.can} ${info.ccYear.chi}</div>
-    <div class="canchi" style="font-size:0.9rem;margin-top:4px">Ngày ${info.ccDay.can} ${info.ccDay.chi} · Tháng ${info.ccMonth.can} ${info.ccMonth.chi}</div>
-    <span class="saotag ${ldClass}" style="margin-top:14px;font-size:1rem;padding:6px 14px">Lục Diệu: ${info.ld.name}</span>
-  </div>`;
-  grid.querySelector(".cell").addEventListener("click", ()=>showPanel(d,m,y));
-  showPanel(d,m,y);
+  grid.innerHTML = cellHtml(d, m, y, 200);
+  bindCellClicks();
+  showPanel(d, m, y);
 }
 
 function renderYear(){
@@ -713,8 +431,6 @@ function renderYear(){
   document.getElementById("navLabel").textContent = `Năm ${curYear}`;
   let html = "";
   for(let m=1;m<=12;m++){
-    const days = new Date(curYear, m, 0).getDate();
-    // Lấy mùng 1 để hiển thị đại diện
     const info = getDayInfo(1, m, curYear);
     const ldClass = "ld-" + info.ld.key;
     html += `<div class="cell" data-m="${m}" data-y="${curYear}" data-d="1" style="min-height:90px">
@@ -725,68 +441,71 @@ function renderYear(){
     </div>`;
   }
   grid.innerHTML = html;
-  grid.querySelectorAll(".cell").forEach(c=>{
-    c.addEventListener("click", ()=>{
-      curMonth = +c.dataset.m - 1;
-      curDay = 1;
-      selectedSolar = {d:1, m:+c.dataset.m, y:+c.dataset.y};
-      setView("month");
-    });
-  });
+  bindCellClicks();
 }
 
 function render(){
-  const grid = document.getElementById("grid");
-  grid.style.gridTemplateColumns = "";
-  if(view === "month") renderMonth();
-  else if(view === "week") renderWeek();
-  else if(view === "day") renderDay();
-  else if(view === "year") renderYear();
+  try{
+    document.getElementById("errBox").innerHTML = "";
+    const grid = document.getElementById("grid");
+    grid.style.gridTemplateColumns = "";
+    if(view === "month") renderMonth();
+    else if(view === "week") renderWeek();
+    else if(view === "day") renderDay();
+    else if(view === "year") renderYear();
+  }catch(e){
+    document.getElementById("errBox").innerHTML =
+      `<div class="err">Lỗi render: ${e.message}</div>`;
+    console.error(e);
+  }
 }
 
-/* ============ PANEL CHI TIẾT ============ */
+/* ============== PANEL CHI TIẾT ============== */
 function showPanel(d, m, y){
-  const info = getDayInfo(d, m, y);
-  const panel = document.getElementById("panel");
-  const ldClass = "ld-" + info.ld.key;
-  const thai = THAI_POSITIONS[info.thaiPos];
-  
-  const goodBadges = info.ts.good.map(g=>`<span class="badge good" title="${g.desc}">${g.name}</span>`).join("") || '<span class="badge neutral">Không có</span>';
-  const badBadges = info.ts.bad.map(b=>`<span class="badge bad" title="${b.desc}">${b.name}</span>`).join("") || '<span class="badge neutral">Không có</span>';
-  
-  panel.innerHTML = `
-    <div class="panel-head">
-      <h2>${pad(d)}/${pad(m)}/${y}</h2>
-      <div class="sub">Âm lịch: ${info.lunar.day}/${info.lunar.month}${info.lunar.isLeap?' (nhuận)':''} — Năm ${info.ccYear.can} ${info.ccYear.chi}</div>
-    </div>
-    <div class="info-grid">
-      <div class="info-box"><div class="lbl">CAN CHI NGÀY</div><div class="val">${info.ccDay.can} ${info.ccDay.chi}</div></div>
-      <div class="info-box"><div class="lbl">CAN CHI THÁNG</div><div class="val">${info.ccMonth.can} ${info.ccMonth.chi}</div></div>
-      <div class="info-box"><div class="lbl">CAN CHI NĂM</div><div class="val">${info.ccYear.can} ${info.ccYear.chi}</div></div>
-      <div class="info-box"><div class="lbl">LỤC DIỆU</div><div class="val"><span class="saotag ${ldClass}">${info.ld.name}</span></div></div>
-    </div>
-    
-    <div class="section-title">THẦN SÁT NGỌC HẠP</div>
-    <div style="margin-bottom:10px">
-      <div style="font-size:0.72rem;color:var(--tho);margin-bottom:5px">★ SAO TỐT</div>
-      <div class="badges">${goodBadges}</div>
-    </div>
-    <div>
-      <div style="font-size:0.72rem;color:var(--do2);margin-bottom:5px">✖ SAO XẤU</div>
-      <div class="badges">${badBadges}</div>
-    </div>
-    
-    <div class="section-title">THAI THẦN</div>
-    <div class="thai-box">
-      <div class="pos">${thai.name} — Hướng ${thai.huong}</div>
-      <div class="desc">${thai.desc}</div>
-    </div>
-  `;
-  panel.classList.add("show");
-  panel.scrollIntoView({behavior:"smooth", block:"nearest"});
+  try{
+    const info = getDayInfo(d, m, y);
+    const panel = document.getElementById("panel");
+    const ldClass = "ld-" + info.ld.key;
+    const thai = THAI_POSITIONS[info.thaiPos];
+    const goodBadges = info.ts.good.length
+      ? info.ts.good.map(g=>`<span class="badge good" title="${g.desc}">${g.name}</span>`).join("")
+      : '<span class="badge neutral">Không có</span>';
+    const badBadges = info.ts.bad.length
+      ? info.ts.bad.map(b=>`<span class="badge bad" title="${b.desc}">${b.name}</span>`).join("")
+      : '<span class="badge neutral">Không có</span>';
+    panel.innerHTML = `
+      <div class="panel-head">
+        <h2>${pad(d)}/${pad(m)}/${y}</h2>
+        <div class="sub">Âm lịch: ${info.lunar.day}/${info.lunar.month}${info.lunar.isLeap?' (nhuận)':''} — Năm ${info.ccYear.can} ${info.ccYear.chi}</div>
+      </div>
+      <div class="info-grid">
+        <div class="info-box"><div class="lbl">CAN CHI NGÀY</div><div class="val">${info.ccDay.can} ${info.ccDay.chi}</div></div>
+        <div class="info-box"><div class="lbl">CAN CHI THÁNG</div><div class="val">${info.ccMonth.can} ${info.ccMonth.chi}</div></div>
+        <div class="info-box"><div class="lbl">CAN CHI NĂM</div><div class="val">${info.ccYear.can} ${info.ccYear.chi}</div></div>
+        <div class="info-box"><div class="lbl">LỤC DIỆU</div><div class="val"><span class="saotag ${ldClass}">${info.ld.name}</span></div></div>
+      </div>
+      <div class="section-title">THẦN SÁT NGỌC HẠP</div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:.72rem;color:var(--tho);margin-bottom:5px">★ SAO TỐT</div>
+        <div class="badges">${goodBadges}</div>
+      </div>
+      <div>
+        <div style="font-size:.72rem;color:var(--do2);margin-bottom:5px">✖ SAO XẤU</div>
+        <div class="badges">${badBadges}</div>
+      </div>
+      <div class="section-title">THAI THẦN</div>
+      <div class="thai-box">
+        <div class="pos">${thai.name} — Hướng ${thai.huong}</div>
+        <div class="desc">${thai.desc}</div>
+      </div>
+    `;
+    panel.classList.add("show");
+  }catch(e){
+    console.error(e);
+  }
 }
 
-/* ============ ĐIỀU KHIỂN ============ */
+/* ============== ĐIỀU KHIỂN ============== */
 function setView(v){
   view = v;
   document.querySelectorAll(".toolbar button").forEach(b=>{
@@ -800,37 +519,33 @@ document.querySelectorAll(".toolbar button").forEach(b=>{
 });
 
 document.getElementById("btnPrev").addEventListener("click", ()=>{
-  if(view === "month" || view === "year"){
-    if(view === "month"){
-      curMonth--;
-      if(curMonth < 0){ curMonth = 11; curYear--; }
-    } else curYear--;
-  } else if(view === "week"){
+  if(view === "month"){
+    curMonth--; if(curMonth<0){curMonth=11;curYear--;}
+  } else if(view === "year") curYear--;
+  else if(view === "week"){
     const dt = new Date(curYear, curMonth, curDay);
-    dt.setDate(dt.getDate() - 7);
-    curYear = dt.getFullYear(); curMonth = dt.getMonth(); curDay = dt.getDate();
+    dt.setDate(dt.getDate()-7);
+    curYear=dt.getFullYear(); curMonth=dt.getMonth(); curDay=dt.getDate();
   } else if(view === "day"){
     const dt = new Date(curYear, curMonth, curDay);
-    dt.setDate(dt.getDate() - 1);
-    curYear = dt.getFullYear(); curMonth = dt.getMonth(); curDay = dt.getDate();
+    dt.setDate(dt.getDate()-1);
+    curYear=dt.getFullYear(); curMonth=dt.getMonth(); curDay=dt.getDate();
   }
   render();
 });
 
 document.getElementById("btnNext").addEventListener("click", ()=>{
-  if(view === "month" || view === "year"){
-    if(view === "month"){
-      curMonth++;
-      if(curMonth > 11){ curMonth = 0; curYear++; }
-    } else curYear++;
-  } else if(view === "week"){
+  if(view === "month"){
+    curMonth++; if(curMonth>11){curMonth=0;curYear++;}
+  } else if(view === "year") curYear++;
+  else if(view === "week"){
     const dt = new Date(curYear, curMonth, curDay);
-    dt.setDate(dt.getDate() + 7);
-    curYear = dt.getFullYear(); curMonth = dt.getMonth(); curDay = dt.getDate();
+    dt.setDate(dt.getDate()+7);
+    curYear=dt.getFullYear(); curMonth=dt.getMonth(); curDay=dt.getDate();
   } else if(view === "day"){
     const dt = new Date(curYear, curMonth, curDay);
-    dt.setDate(dt.getDate() + 1);
-    curYear = dt.getFullYear(); curMonth = dt.getMonth(); curDay = dt.getDate();
+    dt.setDate(dt.getDate()+1);
+    curYear=dt.getFullYear(); curMonth=dt.getMonth(); curDay=dt.getDate();
   }
   render();
 });
@@ -843,6 +558,11 @@ document.getElementById("btnToday").addEventListener("click", ()=>{
   render();
 });
 
-/* ============ KHỞI TẠO ============ */
-renderWeekdays();
-render();
+/* ============== KHỞI TẠO ============== */
+window.addEventListener("DOMContentLoaded", ()=>{
+  renderWeekdays();
+  render();
+});
+</script>
+</body>
+</html>
