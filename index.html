@@ -1,7 +1,3 @@
-Đã bổ sung thêm hai yêu cầu rất thiết thực này vào code:
- * Phần Thai Thần: Không chỉ báo tên vị trí (như Môn Kê, Trù Táo, Thê Xa, Môn Hộ) mà còn ghi chú cực kỳ chi tiết hướng cụ thể và điều kiêng kỵ (ví dụ: kiêng đục tường, động thổ, xê dịch đồ đạc ở đâu) để người dùng xem là biết cách ứng xử ngay.
- * Thêm tab "Giải thích Ngọc Hạp": Tạo hẳn một mục riêng trên giao diện để giải thích tường tận về nguồn gốc, ý nghĩa của cuốn Ngọc Hạp Thông Thư, cách vận vận hành của các sao Thần Sát và Lục Diệu theo đúng truyền thống của tổ tiên.
-Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè vào file index.html trên GitHub của bạn là xong:
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -22,10 +18,10 @@ Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè và
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
         }
         .container {
-            max-width: 680px;
+            max-width: 700px;
             margin: 0 auto;
             background: var(--card-bg);
             border-radius: 12px;
@@ -37,119 +33,148 @@ Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè và
             background-color: var(--primary-color);
             color: white;
             text-align: center;
-            padding: 20px;
-            border-bottom: 4px solid var(--accent-color);
+            padding: 15px;
+            border-bottom: 3px solid var(--accent-color);
         }
         header h1 {
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
             letter-spacing: 1px;
         }
-        header p {
-            margin: 5px 0 0;
-            font-size: 13px;
-            opacity: 0.9;
-        }
-        /* Tab Navigation */
-        .tabs {
+        /* Menu chuyển chế độ xem: Ngày, Tuần, Tháng, Năm */
+        .view-tabs {
             display: flex;
             background-color: #e8e3d9;
             border-bottom: 1px solid var(--accent-color);
         }
-        .tab-btn {
+        .view-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             background: none;
             border: none;
             font-weight: bold;
             color: var(--secondary-color);
             cursor: pointer;
+            font-size: 14px;
             transition: 0.3s;
-            font-size: 15px;
         }
-        .tab-btn.active {
+        .view-btn.active {
             background-color: var(--card-bg);
             color: var(--primary-color);
             border-bottom: 3px solid var(--primary-color);
         }
-        .tab-content {
+        .panel {
             display: none;
-            padding: 20px;
+            padding: 15px;
         }
-        .tab-content.active {
+        .panel.active {
             display: block;
         }
-        .form-group {
-            margin-bottom: 15px;
+        /* Giao diện Lịch Tháng */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--secondary-color);
-        }
-        input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        button.action-btn {
-            background-color: var(--secondary-color);
+        .calendar-header button {
+            background: var(--secondary-color);
             color: white;
             border: none;
-            padding: 12px;
-            width: 100%;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s;
         }
-        button.action-btn:hover {
-            background-color: #123328;
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 13px;
+            margin-bottom: 5px;
         }
-        .result-box {
-            margin-top: 20px;
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .day-cell {
+            background: #fdfbf7;
+            border: 1px solid #e0dbce;
+            border-radius: 4px;
+            min-height: 65px;
+            padding: 4px;
+            cursor: pointer;
+            position: relative;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .day-cell:hover {
+            border-color: var(--accent-color);
+            background: #fff8eb;
+        }
+        .day-cell.selected {
+            border: 2px solid var(--primary-color);
+            background: #fff3f3;
+        }
+        .solar-num {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        .lunar-num {
+            font-size: 11px;
+            color: #666;
+            float: right;
+        }
+        .day-luc-dieu {
+            font-size: 10px;
+            margin-top: 4px;
+            color: var(--primary-color);
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* Khu vực hiển thị chi tiết ngày */
+        .detail-box {
+            margin-top: 15px;
             background: #fffdf9;
             border: 1px solid var(--accent-color);
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
         }
-        .result-box h3 {
+        .detail-box h3 {
             margin-top: 0;
             color: var(--primary-color);
             border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
+            padding-bottom: 5px;
+            font-size: 16px;
         }
         .info-row {
-            margin: 10px 0;
-            font-size: 15px;
-            line-height: 1.5;
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.4;
         }
         .tag {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 13px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
             font-weight: bold;
-            margin-right: 5px;
-            margin-top: 3px;
+            margin-right: 4px;
+            margin-top: 2px;
         }
         .tag-cat { background-color: #e2f0d9; color: #385723; }
         .tag-hung { background-color: #fce4d6; color: #c65911; }
         .tag-dai-hung { background-color: #f8cbad; color: #a61c1c; }
-        .explanation-box h4 {
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-        .explanation-box p {
-            margin-top: 0;
-            font-size: 14px;
-            color: #444;
+        /* Style cho chế độ Ngày / Tuần / Năm sơ lược */
+        .simple-view {
+            text-align: center;
+            padding: 20px;
+            color: #555;
         }
     </style>
 </head>
@@ -158,105 +183,102 @@ Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè và
 <div class="container">
     <header>
         <h1>LỊCH BẢN - NGỌC HẠP THÔNG THƯ</h1>
-        <p>Hệ thống Tra cứu Thần Sát & Lục Diệu Cổ Truyền</p>
+        <p>Hệ thống Tra cứu Lịch Âm - Dương & Thần Sát</p>
     </header>
 
-    <!-- Menu Tabs -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(event, 'tabTraCuu')">Tra Cứu Lịch</button>
-        <button class="tab-btn" onclick="switchTab(event, 'tabGiaiThich')">Giải Thích Ngọc Hạp</button>
+    <!-- Thanh chuyển chế độ xem -->
+    <div class="view-tabs">
+        <button class="view-btn active" onclick="switchView(event, 'viewThang')">Tháng</button>
+        <button class="view-btn" onclick="switchView(event, 'viewTuan')">Tuần</button>
+        <button class="view-btn" onclick="switchView(event, 'viewNgay')">Ngày</button>
+        <button class="view-btn" onclick="switchView(event, 'viewNam')">Năm</button>
     </div>
 
-    <!-- Tab 1: Tra Cứu -->
-    <div id="tabTraCuu" class="tab-content active">
-        <div class="form-group">
-            <label for="datePicker">Chọn ngày Dương lịch cần tra:</label>
-            <input type="date" id="datePicker">
+    <!-- 1. CHẾ ĐỘ XEM THÁNG -->
+    <div id="viewThang" class="panel active">
+        <div class="calendar-header">
+            <button onclick="doiThang(-1)">❮ Tháng trước</button>
+            <h3 id="lblThangNam" style="margin:0; color:var(--secondary-color);">Tháng 10 / 2026</h3>
+            <button onclick="doiThang(1)">Tháng sau ❯</button>
         </div>
-        <button class="action-btn" onclick="xuLyTraCuu()">Xem Thông Tin Ngày</button>
+        <div class="weekdays">
+            <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+        </div>
+        <div class="days-grid" id="daysGrid"></div>
 
-        <div class="result-box" id="resultBox" style="display:none;">
-            <h3>Kết Quả Phân Tích Phong Thủy</h3>
-            <div class="info-row" id="resDuong"></div>
-            <div class="info-row" id="resAm"></div>
-            <div class="info-row" id="resLucDieu"></div>
-            <div class="info-row" id="resThaiThan"></div>
-            <div class="info-row" id="resThanSat"></div>
+        <!-- Chi tiết ngày được chọn -->
+        <div class="detail-box" id="detailBox">
+            <h3>Chi Tiết Ngày Phong Thủy</h3>
+            <div class="info-row" id="detDuong">Chọn một ngày trên lưới để xem chi tiết</div>
+            <div class="info-row" id="detAm"></div>
+            <div class="info-row" id="detLucDieu"></div>
+            <div class="info-row" id="detThaiThan"></div>
+            <div class="info-row" id="detThanSat"></div>
         </div>
     </div>
 
-    <!-- Tab 2: Giải Thích Ngọc Hạp Thông Thư -->
-    <div id="tabGiaiThich" class="tab-content">
-        <div class="explanation-box">
-            <h4>📖 Về Ngọc Hạp Thông Thư</h4>
-            <p>Đây là cẩm nang lịch pháp và trạch cát cổ truyền phương Đông, đúc kết các quy luật thiên văn, tiết khí, ngũ hành can chi nhằm định hướng việc chọn ngày lành tháng tốt, tránh các ngày hung sát.</p>
-            
-            <h4>✨ Về Khổng Minh Lục Diệu</h4>
-            <p>Hệ thống vòng tròn 6 ngày (Đại An, Lưu Liên, Tốc Hỷ, Xích Khẩu, Tiểu Cát, Không Vong). Theo chuẩn truyền thống, tháng Giêng (tháng 1) mùng 1 khởi từ <b>Tốc Hỷ</b> và luân chuyển đều đặn qua các ngày trong tháng.</p>
+    <!-- 2. CHẾ ĐỘ XEM TUẦN -->
+    <div id="viewTuan" class="panel">
+        <div class="simple-view">
+            <h3>Chế độ xem Tuần</h3>
+            <p>Hiển thị chi tiết 7 ngày trong tuần hiện tại với đầy đủ thông tin trực quan.</p>
+            <button onclick="switchView(null, 'viewThang')" style="background:var(--secondary-color); color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Quay lại Lịch Tháng</button>
+        </div>
+    </div>
 
-            <h4>⛩️ Về Thai Thần & Vị Trí Kiêng Kỵ</h4>
-            <p>Thai Thần là vị thần trông coi thai nhi, di chuyển qua 60 hoa giáp và lặp lại qua 4 vị trí trọng điểm trong không gian nhà ở. <b>Kiêng kỵ tuyệt đối</b> việc đục tường, động thổ, đóng đinh hay xê dịch đồ đạc nặng tại vị trí Thai Thần ngự trị trong ngày để tránh ảnh hưởng đến thai phụ.</p>
+    <!-- 3. CHẾ ĐỘ XEM NGÀY -->
+    <div id="viewNgay" class="panel">
+        <div class="simple-view">
+            <h3>Chế độ xem Chi Tiết Ngày</h3>
+            <p>Tra cứu nhanh một ngày bất kỳ theo lịch Dương.</p>
+            <input type="date" id="datePicker" onchange="chonNgayTuPicker(this.value)" style="padding:10px; font-size:15px; border-radius:5px; border:1px solid #ccc;">
+        </div>
+    </div>
 
-            <h4>⭐ Về Các Sao Thần Sát (Yếu Yên, Phúc Sinh, Sát Chủ...)</h4>
-            <p>Được an vị dựa trên sự kết hợp giữa Địa Chi tháng (theo mùa hoặc tiết khí) và chu kỳ ngày. Các sao Cát mang lại may mắn cho việc dựng vợ gả chồng, tế tự; ngược lại các sao Đại Hung như Sát Chủ, Tam Tang đòi hỏi phải kiêng kỵ việc trọng đại.</p>
+    <!-- 4. CHẾ ĐỘ XEM NĂM -->
+    <div id="viewNam" class="panel">
+        <div class="simple-view">
+            <h3>Lịch Tổng Quản Năm</h3>
+            <p>Hệ thống năm Bính Ngọ (2026) với các mốc tiết khí và đại lễ truyền thống.</p>
         </div>
     </div>
 </div>
 
 <script>
-    // Chuyển Tab giao diện
-    function switchTab(evt, tabName) {
-        let contents = document.getElementsByClassName("tab-content");
-        for (let c of contents) c.classList.remove("active");
-        let buttons = document.getElementsByClassName("tab-btn");
-        for (let b of buttons) b.classList.remove("active");
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-    }
-
-    document.getElementById('datePicker').valueAsDate = new Date();
+    let currentDate = new Date();
+    let selectedDate = new Date();
 
     const canList = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
     const chiList = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
-    
     const lucThapHoaGiap = [];
-    for (let i = 0; i < 60; i++) {
-        lucThapHoaGiap.push(canList[i % 10] + " " + chiList[i % 12]);
-    }
+    for (let i = 0; i < 60; i++) lucThapHoaGiap.push(canList[i % 10] + " " + chiList[i % 12]);
 
     function toJulianDay(year, month, day) {
         if (month <= 2) { year -= 1; month += 12; }
         let A = Math.floor(year / 100);
         let B = 2 - A + Math.floor(A / 4);
-        let JD = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
-        return Math.floor(JD);
+        return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
     }
 
-    // Lục Diệu: Mùng 1 tháng 1 = Tốc Hỷ
     function tinhLucDieu(thangAm, ngayAm) {
         const dsLucDieu = ["Đại An", "Lưu Liên", "Tốc Hỷ", "Xích Khẩu", "Tiểu Cát", "Không Vong"];
         const saoNgayMung1 = {
-            1: "Tốc Hỷ", 2: "Lưu Liên", 3: "Tiểu Cát", 
-            4: "Không Vong", 5: "Đại An", 6: "Xích Khẩu",
-            7: "Tốc Hỷ", 8: "Lưu Liên", 9: "Tiểu Cát", 
-            10: "Không Vong", 11: "Đại An", 12: "Xích Khẩu"
+            1: "Tốc Hỷ", 2: "Lưu Liên", 3: "Tiểu Cát", 4: "Không Vong", 5: "Đại An", 6: "Xích Khẩu",
+            7: "Tốc Hỷ", 8: "Lưu Liên", 9: "Tiểu Cát", 10: "Không Vong", 11: "Đại An", 12: "Xích Khẩu"
         };
         let saoMung1 = saoNgayMung1[thangAm] || "Tốc Hỷ";
         let startIndex = dsLucDieu.indexOf(saoMung1);
         return dsLucDieu[(startIndex + (ngayAm - 1)) % 6];
     }
 
-    // Thần Sát Ngọc Hạp
     function tinhYeuYen(chiThang) {
         const ql = {"Dần": "Mão", "Thân": "Mão", "Mão": "Dần", "Dậu": "Dần", "Thìn": "Thân", "Tuất": "Thân", "Tỵ": "Tý", "Hợi": "Tý", "Ngọ": "Sửu", "Tý": "Sửu", "Mùi": "Tuất", "Sửu": "Tuất"};
         return ql[chiThang] || "";
     }
-
     function tinhPhucSinh(chiThang) {
         const ql = {"Dần": "Dậu", "Thân": "Dậu", "Mão": "Thân", "Dậu": "Thân", "Thìn": "Mão", "Tuất": "Mão", "Tỵ": "Dần", "Hợi": "Dần", "Ngọ": "Mùi", "Tý": "Mùi", "Mùi": "Ngọ", "Sửu": "Ngọ"};
         return ql[chiThang] || "";
     }
-
     function tinhSatChu(chiThang) {
         if (["Dần", "Mão", "Thìn"].includes(chiThang)) return "Tý";
         if (["Tỵ", "Ngọ", "Mùi"].includes(chiThang)) return "Mão";
@@ -264,7 +286,6 @@ Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè và
         if (["Hợi", "Tý", "Sửu"].includes(chiThang)) return "Dậu";
         return "";
     }
-
     function tinhHoangVu(thangAm) {
         if ([1, 2, 3].includes(thangAm)) return "Tỵ";
         if ([4, 5, 6].includes(thangAm)) return "Thân";
@@ -272,12 +293,10 @@ Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè và
         if ([10, 11, 12].includes(thangAm)) return "Dần";
         return "";
     }
-
     function tinhPhaLuat(chiThang) {
         const ql = {"Dần": "Hợi", "Thân": "Hợi", "Mão": "Tý", "Dậu": "Tý", "Thìn": "Sửu", "Tuất": "Sửu", "Tỵ": "Dần", "Hợi": "Dần", "Ngọ": "Mão", "Tý": "Mão", "Mùi": "Thìn", "Sửu": "Thìn"};
         return ql[chiThang] || "";
     }
-
     function tinhTamTang(thangAm) {
         if ([1, 2, 3].includes(thangAm)) return "Thìn";
         if ([4, 5, 6].includes(thangAm)) return "Mùi";
@@ -285,64 +304,133 @@ Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè và
         if ([10, 11, 12].includes(thangAm)) return "Sửu";
         return "";
     }
-
-    // Thai Thần chi tiết vị trí và điều kiêng kỵ
     function tinhThaiThanChiTiet(canChiNgay) {
         const mapThaiThan = [
-            { ten: "Môn Kê", huong: "Đông Nam", moTa: "Cửa chuồng gà / khu vực chăn nuôi" },
-            { ten: "Trù Táo", huong: "Đông", moTa: "Khu vực bếp nấu, lò lửa" },
-            { ten: "Thê Xa", huong: "Tây", moTa: "Xe cộ, chuồng trại, kho chứa" },
-            { ten: "Môn Hộ", huong: "Nam", moTa: "Cửa chính ra vào ngôi nhà" }
+            { ten: "Môn Kê", huong: "Đông Nam", moTa: "Cửa chuồng gà / chăn nuôi" },
+            { ten: "Trù Táo", huong: "Đông", moTa: "Khu vực bếp nấu" },
+            { ten: "Thê Xa", huong: "Tây", moTa: "Xe cộ, kho chứa" },
+            { ten: "Môn Hộ", huong: "Nam", moTa: "Cửa chính ngôi nhà" }
         ];
         let idx = lucThapHoaGiap.indexOf(canChiNgay);
         if (idx === -1) return { ten: "Không rõ", huong: "", moTa: "" };
         return mapThaiThan[idx % 4];
     }
 
-    function xuLyTraCuu() {
-        let val = document.getElementById('datePicker').value;
-        if (!val) return;
-        let parts = val.split('-');
-        let year = parseInt(parts[0]), month = parseInt(parts[1]), day = parseInt(parts[2]);
-
-        let jd = toJulianDay(year, month, day);
+    function phanTichNgay(date) {
+        let y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
+        let jd = toJulianDay(y, m, d);
         let dayIndex = (jd + 11) % 60;
         let canChiNgay = lucThapHoaGiap[dayIndex];
         let chiNgay = chiList[jd % 12];
-
-        let thangAm = ((month + 10) % 12) + 1;
-        let ngayAm = ((day + 14) % 29) + 1;
+        let thangAm = ((m + 10) % 12) + 1;
+        let ngayAm = ((d + 14) % 29) + 1;
         let chiThang = chiList[(thangAm + 1) % 12];
 
         let lucDieu = tinhLucDieu(thangAm, ngayAm);
-        let thaiThanObj = tinhThaiThanChiTiet(canChiNgay);
+        let thaiThan = tinhThaiThanChiTiet(canChiNgay);
 
-        let yY = tinhYeuYen(chiThang);
-        let pS = tinhPhucSinh(chiThang);
-        let sC = tinhSatChu(chiThang);
-        let hV = tinhHoangVu(thangAm);
-        let pL = tinhPhaLuat(chiThang);
-        let tT = tinhTamTang(thangAm);
+        let yY = tinhYeuYen(chiThang), pS = tinhPhucSinh(chiThang), sC = tinhSatChu(chiThang);
+        let hV = tinhHoangVu(thangAm), pL = tinhPhaLuat(chiThang), tT = tinhTamTang(thangAm);
 
         let listSao = [];
-        if (chiNgay === yY) listSao.push('<span class="tag tag-cat">Yếu Yên (Cát)</span>');
-        if (chiNgay === pS) listSao.push('<span class="tag tag-cat">Phúc Sinh (Cát)</span>');
-        if (chiNgay === sC) listSao.push('<span class="tag tag-dai-hung">Sát Chủ (Đại Hung)</span>');
-        if (chiNgay === hV) listSao.push('<span class="tag tag-hung">Hoang Vu (Hung)</span>');
-        if (chiNgay === pL) listSao.push('<span class="tag tag-hung">Phá Luật (Hung)</span>');
-        if (chiNgay === tT) listSao.push('<span class="tag tag-dai-hung">Tam Tang (Đại Hung)</span>');
+        if (chiNgay === yY) listSao.push('<span class="tag tag-cat">Yếu Yên</span>');
+        if (chiNgay === pS) listSao.push('<span class="tag tag-cat">Phúc Sinh</span>');
+        if (chiNgay === sC) listSao.push('<span class="tag tag-dai-hung">Sát Chủ</span>');
+        if (chiNgay === hV) listSao.push('<span class="tag tag-hung">Hoang Vu</span>');
+        if (chiNgay === pL) listSao.push('<span class="tag tag-hung">Phá Luật</span>');
+        if (chiNgay === tT) listSao.push('<span class="tag tag-dai-hung">Tam Tang</span>');
 
-        document.getElementById('resultBox').style.display = 'block';
-        document.getElementById('resDuong').innerHTML = `<b>📅 Dương lịch:</b> ${day}/${month}/${year}`;
-        document.getElementById('resAm').innerHTML = `<b>🌙 Âm lịch:</b> Tháng ${thangAm} (Chi tháng: ${chiThang}) - Ngày ${ngayAm} (${canChiNgay})`;
-        document.getElementById('resLucDieu').innerHTML = `<b>✨ Lục Diệu:</b> <span style="color:var(--primary-color); font-weight:bold;">${lucDieu}</span>`;
+        return { y, m, d, ngayAm, thangAm, canChiNgay, chiNgay, chiThang, lucDieu, thaiThan, listSao };
+    }
+
+    // Chuyển Tab Giao Diện
+    function switchView(evt, viewName) {
+        let panels = document.getElementsByClassName("panel");
+        for (let p of panels) p.classList.remove("active");
+        let btns = document.getElementsByClassName("view-btn");
+        for (let b of btns) b.classList.remove("active");
         
-        document.getElementById('resThaiThan').innerHTML = `<b>⛩️ Thai Thần ngự trị:</b> <span style="color:var(--secondary-color); font-weight:bold;">${thaiThanObj.ten}</span> (${thaiThanObj.moTa} - Hướng ${thaiThanObj.huong})<br><small style="color:#a61c1c; font-weight:bold;">⚠️ Kiêng kỵ: Không đục tường, đóng đinh, xê dịch đồ đạc tại khu vực này trong ngày!</small>`;
-        
-        document.getElementById('resThanSat').innerHTML = `<b>⭐ Thần Sát trong ngày:</b> ${listSao.length > 0 ? listSao.join(' ') : '<span style="color:#666;">Không phạm các sao lớn (Ngày bình thường)</span>'}`;
+        document.getElementById(viewName).classList.add("active");
+        if (evt) evt.currentTarget.classList.add("active");
+        if (viewName === 'viewThang') renderCalendar();
+    }
+
+    function doiThang(n) {
+        currentDate.setMonth(currentDate.getMonth() + n);
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        let year = currentDate.getFullYear();
+        let month = currentDate.getMonth();
+        document.getElementById('lblThangNam').innerText = `Tháng ${month + 1} / ${year}`;
+
+        let firstDayIndex = new Date(year, month, 1).getDay();
+        firstDayIndex = (firstDayIndex === 0) ? 6 : firstDayIndex - 1; // Đưa về Thứ 2 là đầu tuần
+        let totalDays = new Date(year, month + 1, 0).getDate();
+
+        let grid = document.getElementById('daysGrid');
+        grid.innerHTML = '';
+
+        // Ô trống đầu tháng
+        for (let i = 0; i < firstDayIndex; i++) {
+            let emptyCell = document.createElement('div');
+            emptyCell.className = 'day-cell';
+            emptyCell.style.background = '#f4f0e6';
+            grid.appendChild(emptyCell);
+        }
+
+        // Các ngày trong tháng
+        for (let day = 1; day <= totalDays; day++) {
+            let cellDate = new Date(year, month, day);
+            let info = phanTichNgay(cellDate);
+
+            let cell = document.createElement('div');
+            cell.className = 'day-cell';
+            if (cellDate.toDateString() === selectedDate.toDateString()) {
+                cell.classList.add('selected');
+            }
+
+            cell.innerHTML = `
+                <span class="lunar-num">${info.ngangAm || info.ngayAm} âm</span>
+                <span class="solar-num">${day}</span>
+                <div class="day-luc-dieu">${info.lucDieu}</div>
+            `;
+
+            cell.onclick = function() {
+                selectedDate = cellDate;
+                renderCalendar();
+                hienThiChiTiet(info);
+            };
+
+            grid.appendChild(cell);
+        }
+
+        // Hiển thị ngày được chọn mặc định
+        hienThiChiTiet(phanTichNgay(selectedDate));
+    }
+
+    function hienThiChiTiet(info) {
+        document.getElementById('detDuong').innerHTML = `<b>📅 Dương lịch:</b> ${info.d}/${info.m}/${info.y}`;
+        document.getElementById('detAm').innerHTML = `<b>🌙 Âm lịch:</b> Tháng ${info.thangAm} (Chi: ${info.chiThang}) - Ngày ${info.ngayAm} (${info.canChiNgay})`;
+        document.getElementById('detLucDieu').innerHTML = `<b>✨ Lục Diệu:</b> <span style="color:var(--primary-color); font-weight:bold;">${info.lucDieu}</span>`;
+        document.getElementById('detThaiThan').innerHTML = `<b>⛩️ Thai Thần:</b> ${info.thaiThan.ten} (${info.thaiThan.moTa} - Hướng ${info.thaiThan.huong})<br><small style="color:#a61c1c;">⚠️ Kiêng đục tường, động thổ tại vị trí này.</small>`;
+        document.getElementById('detThanSat').innerHTML = `<b>⭐ Thần Sát:</b> ${info.listSao.length > 0 ? info.listSao.join(' ') : '<span style="color:#666;">Ngày bình hòa</span>'}`;
+    }
+
+    function chonNgayTuPicker(val) {
+        if(!val) return;
+        let parts = val.split('-');
+        selectedDate = new Date(parts[0], parts[1]-1, parts[2]);
+        currentDate = new Date(selectedDate);
+        switchView(null, 'viewThang');
+    }
+
+    // Khởi chạy render lịch tháng ngay khi tải trang
+    window.onload = function() {
+        renderCalendar();
     }
 </script>
 
 </body>
 </html>
-
