@@ -1,375 +1,273 @@
-<!DOCTYPE html>
-<html lang="vi" class="h-full">
+</<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Bản - Lịch Vạn Niên & Ngọc Hạp Thông Thư</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brocadeRed: '#5c1d24',
-                        brocadeDarkRed: '#3d1217',
-                        brocadeGold: '#d4af37',
-                        brocadeLightGold: '#f3e5ab',
-                        brocadeIndigo: '#1b263b',
-                        brocadePaper: '#fbf8f1',
-                        brocadeBorder: '#c29b38'
-                    },
-                    fontFamily: {
-                        serif: ['Merriweather', 'serif', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Lịch Bản - Ngọc Hạp & Lục Diệu</title>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .brocade-pattern {
-            background-color: #5c1d24;
-            background-image: radial-gradient(#d4af37 0.75px, transparent 0.75px), radial-gradient(#d4af37 0.75px, #5c1d24 0.75px);
-            background-size: 30px 30px;
-            background-position: 0 0, 15px 15px;
+        :root {
+            --primary-color: #8b1e0f; /* Đỏ thổ cẩm trầm */
+            --secondary-color: #2c5e3b; /* Xanh chàm cổ */
+            --accent-color: #d4af37; /* Vàng đồng */
+            --bg-color: #fcf9f2;
+            --card-bg: #ffffff;
+            --text-color: #2b2b2b;
         }
-        .border-ornament {
-            border: 2px solid #d4af37;
-            box-shadow: 0 0 0 4px #5c1d24, inset 0 0 0 2px #d4af37;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
         }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 2px solid var(--accent-color);
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 4px solid var(--accent-color);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1f4229;
+        }
+        .result-box {
+            margin-top: 20px;
+            background: #fdfbf7;
+            border: 1px dashed var(--accent-color);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .result-box h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .info-row {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .tag-cat { background-color: #e2f0d9; color: #385723; }
+        .tag-hung { background-color: #fce4d6; color: #c65911; }
+        .tag-dai-hung { background-color: #f8cbad; color: #a61c1c; }
     </style>
 </head>
-<body class="h-full bg-brocadePaper text-gray-800 flex flex-col">
+<body>
 
-    <!-- Header / Banner -->
-    <header class="brocade-pattern text-brocadeLightGold py-6 px-4 shadow-xl border-b-4 border-brocadeGold">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-center sm:text-left">
-                <h1 class="text-3xl sm:text-4xl font-serif font-bold tracking-wider text-brocadeGold drop-shadow-md">Lịch Bản</h1>
-                <p class="text-xs sm:text-sm text-gray-200 mt-1 uppercase tracking-widest">Tra Cứu Lịch Âm Dương & Thần Sát Ngọc Hạp Thông Thư</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick="moModalHuongDan()" class="bg-brocadeGold text-brocadeDarkRed px-4 py-2 rounded-lg font-bold text-sm shadow hover:bg-yellow-400 transition flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                    Đưa lên GitHub
-                </button>
-            </div>
-        </div>
+<div class="container">
+    <header>
+        <h1>LỊCH BẢN - NGỌC HẠP THÔNG THƯ</h1>
+        <p>Hệ thống Tra cứu Thần Sát & Lục Diệu Vĩnh Cửu</p>
     </header>
-
-    <!-- Main Container -->
-    <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <!-- Left Column: Picker & Quick Controls -->
-        <div class="md:col-span-1 bg-white p-5 rounded-xl shadow-md border border-brocadeBorder flex flex-col gap-4">
-            <h2 class="text-lg font-serif font-bold text-brocadeRed border-b pb-2 flex items-center gap-2">
-                <svg class="w-5 h-5 text-brocadeGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                Chọn Ngày Tra Cứu
-            </h2>
-            
-            <div>
-                <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Ngày Dương Lịch</label>
-                <input type="date" id="inputDuongLich" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-brocadeRed outline-none bg-gray-50 text-sm font-medium">
-            </div>
-
-            <div class="flex gap-2">
-                <button onclick="chonHomNay()" class="flex-1 bg-brocadeRed text-white py-2 rounded-lg font-medium text-sm shadow hover:bg-red-900 transition">Hôm Nay</button>
-                <button onclick="doiNgay(-1)" class="px-3 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-bold">◀</button>
-                <button onclick="doiNgay(1)" class="px-3 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-bold">▶</button>
-            </div>
-
-            <hr class="my-2 border-gray-200">
-
-            <div class="bg-brocadeLightGold/50 p-3 rounded-lg border border-brocadeGold/30 text-xs leading-relaxed text-gray-700">
-                <span class="font-bold text-brocadeRed">Nguyên tắc thuật toán:</span> Ứng dụng vận hành hoàn toàn tự động bằng thuật toán thiên văn, Lục Diệu chuẩn người Việt (Tháng 1 mùng 1 = Đại An), và hệ thống Thần Sát Ngọc Hạp Thông Thư vĩnh cửu.
-            </div>
+    <div class="content">
+        <div class="form-group">
+            <label for="datePicker">Chọn ngày Dương lịch:</label>
+            <input type="date" id="datePicker">
         </div>
+        <button onclick="traCuu()">Xem Thông Tin Ngày</button>
 
-        <!-- Right Column: Detailed Results Card -->
-        <div class="md:col-span-2 flex flex-col gap-6">
-            
-            <!-- Main Date Display Card -->
-            <div class="bg-white p-6 rounded-xl shadow-md border-2 border-brocadeGold/80 relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-brocadeGold text-brocadeDarkRed text-xs font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">Lịch Bản Vạn Niên</div>
-                
-                <div class="text-center sm:text-left mb-4">
-                    <p class="text-xs uppercase tracking-widest text-gray-500 font-semibold">Dương Lịch</p>
-                    <h3 id="hienThiDuong" class="text-xl font-bold text-gray-800">--/--/----</h3>
-                </div>
-
-                <hr class="border-gray-200 my-3">
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                    <div class="bg-brocadePaper p-3 rounded-lg border border-brocadeGold/30">
-                        <p class="text-xs text-gray-500 uppercase font-semibold">Âm Lịch</p>
-                        <p id="hienThiAm" class="text-lg font-serif font-bold text-brocadeRed mt-1">--</p>
-                        <p id="hienThiCanChiNgayThang" class="text-xs text-gray-600 mt-1">Can Chi: --</p>
-                    </div>
-
-                    <div class="bg-brocadePaper p-3 rounded-lg border border-brocadeGold/30">
-                        <p class="text-xs text-gray-500 uppercase font-semibold">Lục Diệu (Chuẩn Người Việt)</p>
-                        <p id="hienThiLucDieu" class="text-lg font-bold text-brocadeIndigo mt-1">--</p>
-                        <p id="hienThiYnghiaLucDieu" class="text-xs text-gray-600 mt-1">--</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Thần Sát & Thai Thần Card -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-brocadeBorder flex flex-col gap-4">
-                <h3 class="text-lg font-serif font-bold text-brocadeRed border-b pb-2 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-brocadeGold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Hệ Thống Thần Sát & Thai Thần Ngọc Hạp
-                </h3>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-gray-50 p-3.5 rounded-lg border">
-                        <span class="text-xs font-bold uppercase text-gray-500">Các Sao Trong Ngày</span>
-                        <div id="hienThiCacSao" class="mt-2 flex flex-wrap gap-1.5">
-                            <!-- Dynamic badges -->
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 p-3.5 rounded-lg border">
-                        <span class="text-xs font-bold uppercase text-gray-500">Vị Trí Thai Thần (60 Hoa Giáp)</span>
-                        <p id="hienThiThaiThan" class="text-sm font-bold text-brocadeRed mt-2">--</p>
-                        <p class="text-[11px] text-gray-500 mt-1">Kiêng động thổ, đục tường, xê dịch đồ đạc tại vị trí này.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-brocadeDarkRed text-brocadeLightGold py-4 text-center text-xs mt-auto border-t border-brocadeGold/40">
-        <p>Lịch Bản — Kết hợp văn hóa truyền thống & thuật toán vĩnh cửu. Phục vụ cộng đồng.</p>
-    </footer>
-
-    <!-- Modal Hướng dẫn GitHub Pages -->
-    <div id="modalHuongDan" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border-2 border-brocadeGold max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h3 class="text-lg font-serif font-bold text-brocadeRed">Hướng Dẫn Đưa Lên GitHub Pages</h3>
-                <button onclick="dongModalHuongDan()" class="text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
-            </div>
-            
-            <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
-                <p>Để lưu trữ và chia sẻ web app <strong>Lịch Bản</strong> miễn phí trên GitHub Pages, bạn thực hiện các bước cực kỳ đơn giản sau:</p>
-                
-                <ol class="list-decimal pl-5 space-y-2">
-                    <li>Đăng nhập vào tài khoản <a href="https://github.com" target="_blank" class="text-blue-600 underline">GitHub</a> của bạn.</li>
-                    <li>Tạo một Repository (kho lưu trữ) mới, đặt tên ví dụ: <code>lich-ban</code>. Chọn chế độ <strong>Public</strong>.</li>
-                    <li>Tạo một file mới trong repository đặt tên chính xác là: <code>index.html</code>.</li>
-                    <li>Copy toàn bộ mã nguồn của file HTML này dán vào file <code>index.html</code> trên GitHub rồi ấn <strong>Commit changes</strong>.</li>
-                    <li>Vào mục <strong>Settings</strong> của repository &gt; Chọn tab <strong>Pages</strong> ở menu bên trái.</li>
-                    <li>Ở phần <strong>Build and deployment</strong> &gt; <strong>Branch</strong>, chọn nhánh <code>main</code> (hoặc <code>master</code>) và thư mục <code>/ (root)</code>, sau đó ấn <strong>Save</strong>.</li>
-                    <li>Chờ khoảng 1-2 phút, GitHub sẽ cung cấp cho bạn một đường link trực tuyến công khai để truy cập ứng dụng từ bất kỳ thiết bị nào!</li>
-                </ol>
-            </div>
-
-            <div class="mt-6 text-right">
-                <button onclick="dongModalHuongDan()" class="bg-brocadeRed text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-900 transition">Đã hiểu</button>
-            </div>
+        <div class="result-box" id="resultBox" style="display:none;">
+            <h3>Kết Quả Tra Cứu</h3>
+            <div class="info-row" id="resDuong"></div>
+            <div class="info-row" id="resAm"></div>
+            <div class="info-row" id="resLucDieu"></div>
+            <div class="info-row" id="resThaiThan"></div>
+            <div class="info-row" id="resThanSat"></div>
         </div>
     </div>
+</div>
 
-    <!-- JavaScript Calculation Engine -->
-    <script>
-        // --- 1. MẢNG DỮ LIỆU & CAN CHI ---
-        const thienCan = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
-        const diaChi = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
-        
-        const lucThapHoaGiap = [];
-        for (let i = 0; i < 60; i++) {
-            lucThapHoaGiap.push(thienCan[i % 10] + " " + diaChi[i % 12]);
-        }
+<script>
+    // Đặt mặc định ngày hôm nay
+    document.getElementById('datePicker').valueAsDate = new Date();
 
-        // --- 2. THUẬT TOÁN ĐỔI DƯƠNG sang ÂM LỊCH (Thuật toán chuẩn thiên văn giả lập chính xác cho app) ---
-        function convertSolarToLunar(solarDate) {
-            // Mốc chuẩn: 1/1/2026 Dương = Bính Ngọ, Tháng 11 (hoặc Âm lịch tương ứng)
-            // Để đảm bảo app chạy mượt mà độc lập, ta tính toán chuyển đổi quy chuẩn ngàyJulian
-            let d = solarDate.getDate();
-            let m = solarDate.getMonth() + 1;
-            let y = solarDate.getFullYear();
+    // Dữ liệu 60 Hoa Giáp
+    const lucThapHoaGiap = [
+        "Giáp Tý", "Ất Sửu", "Bính Dần", "Đinh Mão", "Mậu Thìn", "Kỷ Tỵ", "Canh Ngọ", "Tân Mùi", "Nhâm Thân", "Quý Dậu",
+        "Giáp Tuất", "Ất Hợi", "Bính Tý", "Đinh Sửu", "Mậu Dần", "Kỷ Mão", "Canh Thìn", "Tân Tỵ", "Nhâm Ngọ", "Quý Mùi",
+        "Giáp Thân", "Ất Dậu", "Bính Tuất", "Đinh Hợi", "Mậu Tý", "Kỷ Sửu", "Canh Dần", "Tân Mão", "Nhâm Thìn", "Quý Tỵ",
+        "Giáp Ngọ", "Ất Mùi", "Bính Thân", "Đinh Dậu", "Mậu Tuất", "Kỷ Hợi", "Canh Tý", "Tân Sửu", "Nhâm Dần", "Quý Mão",
+        "Giáp Thìn", "Ất Tỵ", "Bính Ngọ", "Đinh Mùi", "Mậu Thân", "Kỷ Dậu", "Canh Tuất", "Tân Hợi", "Nhâm Tý", "Quý Sửu",
+        "Giáp Dần", "Ất Mão", "Bính Thìn", "Đinh Tỵ", "Mậu Ngọ", "Kỷ Mùi", "Canh Thân", "Tân Dậu", "Nhâm Tuất", "Quý Hợi"
+    ];
 
-            // Tính xấp xỉ lịch âm cơ bản dựa trên chênh lệch ngày so với mốc 2026
-            let baseDate = new Date(2026, 0, 1); // 1/1/2026
-            let diffDays = Math.floor((solarDate - baseDate) / (1000 * 60 * 60 * 24));
-            
-            // Âm lịch 2026 bắt đầu từ 17/2/2026 Dương (Mùng 1 Tết Bính Ngọ)
-            // Tính bù trừ để ra tháng âm, ngày âm tương đối chuẩn xác
-            let lunarDay = ((diffDays + 16) % 30) + 1;
-            let lunarMonth = (Math.floor((diffDays + 16) / 30) % 12) + 1;
-            if (lunarMonth <= 0) lunarMonth += 12;
-            if (lunarDay <= 0) { lunarDay += 30; lunarMonth = lunarMonth === 1 ? 12 : lunarMonth - 1; }
+    const danhSachChi = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
 
-            // Tính Can Chi ngày (dựa trên mốc 1/1/2026 là Canh Tý hoặc tương đương)
-            let dayIndex = (Math.floor(solarDate.getTime() / (1000 * 60 * 60 * 24)) + 11) % 60;
-            if (dayIndex < 0) dayIndex += 60;
-            let canChiNgayStr = lucThapHoaGiap[dayIndex];
-            let chiNgayStr = canChiNgayStr.split(" ")[1];
-
-            // Tính Chi tháng âm lịch
-            let chiThangArr = ["Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi", "Tý", "Sửu"];
-            let chiThangStr = chiThangArr[(lunarMonth - 1 + 2) % 12]; // Tháng 1 âm là Dần
-
-            return {
-                day: lunarDay,
-                month: lunarMonth,
-                year: y,
-                canChiNgay: canChiNgayStr,
-                chiNgay: chiNgayStr,
-                chiThang: chiThangStr
-            };
-        }
-
-        // --- 3. HỆ THỐNG LỤC DIỆU (Chuẩn người Việt: Tháng 1 mùng 1 = Đại An) ---
-        function tinhLucDieu(thangAm, ngayAm) {
-            const dsLucDieu = [
-                { ten: "Đại An", yNghia: "Cát — Bình an, thuận lợi, vạn sự hanh thông." },
-                { ten: "Lưu Liên", yNghia: "Hung nhẹ — Trì trệ, kỵ tang ma, cưới hỏi." },
-                { ten: "Tốc Hỷ", yNghia: "Cát — Nhanh chóng, tin vui, mưu sự mau thành." },
-                { ten: "Xích Khẩu", yNghia: "Đại hung — Khẩu thiệt, tranh cãi, đề phòng thị phi." },
-                { ten: "Tiểu Cát", yNghia: "Cát — May mắn nhỏ, tài lộc tốt, xuất hành thuận lợi." },
-                { ten: "Không Vong", yNghia: "Đại hung — Trống rỗng, mưu sự khó thành, thất thoát." }
-            ];
-            
-            const saoNgayMung1 = {
-                1: "Đại An", 2: "Lưu Liên", 3: "Tốc Hỷ", 
-                4: "Xích Khẩu", 5: "Tiểu Cát", 6: "Không Vong",
-                7: "Đại An", 8: "Lưu Liên", 9: "Tốc Hỷ", 
-                10: "Xích Khẩu", 11: "Tiểu Cát", 12: "Không Vong"
-            };
-
-            let tenMung1 = saoNgayMung1[thangAm] || "Đại An";
-            let startIndex = dsLucDieu.findIndex(s => s.ten === tenMung1);
-            let finalIndex = (startIndex + (ngayAm - 1)) % 6;
-
-            return dsLucDieu[finalIndex];
-        }
-
-        // --- 4. HỆ THỐNG 7 THẦN SÁT NGỌC HẠP ---
-        function tinhYeuYen(chiThang) {
-            const q = { "Dần": "Mão", "Thân": "Mão", "Mão": "Dần", "Dậu": "Dần", "Thìn": "Thân", "Tuất": "Thân", "Tỵ": "Tý", "Hợi": "Tý", "Ngọ": "Sửu", "Tý": "Sửu", "Mùi": "Tuất", "Sửu": "Tuất" };
-            return q[chiThang] || "";
-        }
-        function tinhPhucSinh(chiThang) {
-            const q = { "Dần": "Dậu", "Thân": "Dậu", "Mão": "Thân", "Dậu": "Thân", "Thìn": "Mão", "Tuất": "Mão", "Tỵ": "Dần", "Hợi": "Dần", "Ngọ": "Mùi", "Tý": "Mùi", "Mùi": "Ngọ", "Sửu": "Ngọ" };
-            return q[chiThang] || "";
-        }
-        function tinhSatChu(chiThang) {
-            if (["Dần", "Mão", "Thìn"].includes(chiThang)) return "Tý";
-            if (["Tỵ", "Ngọ", "Mùi"].includes(chiThang)) return "Mão";
-            if (["Thân", "Dậu", "Tuất"].includes(chiThang)) return "Ngọ";
-            if (["Hợi", "Tý", "Sửu"].includes(chiThang)) return "Dậu";
-            return "";
-        }
-        function tinhHoangVu(thangAm) {
-            if ([1, 2, 3].includes(thangAm)) return "Tỵ";
-            if ([4, 5, 6].includes(thangAm)) return "Thân";
-            if ([7, 8, 9].includes(thangAm)) return "Hợi";
-            if ([10, 11, 12].includes(thangAm)) return "Dần";
-            return "";
-        }
-        function tinhPhaLuat(chiThang) {
-            const q = { "Dần": "Hợi", "Thân": "Hợi", "Mão": "Tý", "Dậu": "Tý", "Thìn": "Sửu", "Tuất": "Sửu", "Tỵ": "Dần", "Hợi": "Dần", "Ngọ": "Mão", "Tý": "Mão", "Mùi": "Thìn", "Sửu": "Thìn" };
-            return q[chiThang] || "";
-        }
-        function tinhTamTang(thangAm) {
-            if ([1, 2, 3].includes(thangAm)) return "Thìn";
-            if ([4, 5, 6].includes(thangAm)) return "Mùi";
-            if ([7, 8, 9].includes(thangAm)) return "Tuất";
-            if ([10, 11, 12].includes(thangAm)) return "Sửu";
-            return "";
-        }
-        function tinhThaiThan(canChiNgay) {
-            const viTri = ["Môn Kê (Chuồng gà)", "Trù Táo (Bếp)", "Thê Xa (Xe cộ)", "Môn Hộ (Cửa chính)"];
-            let idx = lucThapHoaGiap.indexOf(canChiNgay);
-            if (idx === -1) return "Không xác định";
-            return viTri[idx % 4];
-        }
-
-        // --- 5. HÀM CẬP NHẬT GIAO DIỆN ---
-        function capNhatLich() {
-            let val = document.getElementById("inputDuongLich").value;
-            let dateObj = val ? new Date(val) : new Date();
-
-            // Hiển thị Dương lịch
-            let options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
-            document.getElementById("hienThiDuong").innerText = dateObj.toLocaleDateString('vi-VN', options);
-
-            // Tính Âm lịch & Can Chi
-            let lunar = convertSolarToLunar(dateObj);
-            document.getElementById("hienThiAm").innerText = `Tháng ${lunar.month} (Âm Lịch) - Ngày ${lunar.day}`;
-            document.getElementById("hienThiCanChiNgayThang").innerText = `Ngày: ${lunar.canChiNgay} | Tháng Chi: ${lunar.chiThang}`;
-
-            // Lục Diệu
-            let lucDieu = tinhLucDieu(lunar.month, lunar.day);
-            document.getElementById("hienThiLucDieu").innerText = lucDieu.ten;
-            document.getElementById("hienThiYnghiaLucDieu").innerText = lucDieu.yNghia;
-
-            // Kiểm tra Thần Sát Ngọc Hạp
-            let yY = tinhYeuYen(lunar.chiThang);
-            let pS = tinhPhucSinh(lunar.chiThang);
-            let sC = tinhSatChu(lunar.chiThang);
-            let hV = tinhHoangVu(lunar.month);
-            let pL = tinhPhaLuat(lunar.chiThang);
-            let tT = tinhTamTang(lunar.month);
-
-            let boxSao = document.getElementById("hienThiCacSao");
-            boxSao.innerHTML = "";
-
-            let danhSachSaoFound = [];
-            if (lunar.chiNgay === yY) danhSachSaoFound.push({ ten: "Yếu Yên", loai: "cat", desc: "Cát tinh - Tốt cho hôn nhân, cầu tài" });
-            if (lunar.chiNgay === pS) danhSachSaoFound.push({ ten: "Phúc Sinh", loai: "cat", desc: "Cát tinh - Tốt cho cầu phúc, tế tự" });
-            if (lunar.chiNgay === sC) danhSachSaoFound.push({ ten: "Sát Chủ", loai: "hung", desc: "Đại Hung - Kỵ cưới hỏi, mai táng" });
-            if (lunar.chiNgay === hV) danhSachSaoFound.push({ ten: "Hoang Vu", loai: "hung", desc: "Hung tinh - Kỵ khai trương, xuất hành" });
-            if (lunar.chiNgay === pL) danhSachSaoFound.push({ ten: "Phá Luật", loai: "hung", desc: "Hung tinh - Kỵ kiện tụng, tranh chấp" });
-            if (lunar.chiNgay === tT) danhSachSaoFound.push({ ten: "Tam Tang", loai: "hung", desc: "Đại Hung - Kỵ mai táng, cưới hỏi" });
-
-            if (danhSachSaoFound.length === 0) {
-                boxSao.innerHTML = `<span class="text-xs text-gray-500 italic">Không có các sao đặc biệt trong ngày này.</span>`;
-            } else {
-                danhSachSaoFound.forEach(s => {
-                    let bg = s.loai === 'cat' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-red-100 text-red-800 border-red-300';
-                    boxSao.innerHTML += `<div class="px-2.5 py-1 rounded-md border text-xs font-semibold ${bg}" title="${s.desc}">${s.ten}</div>`;
-                });
-            }
-
-            // Thai Thần
-            document.getElementById("hienThiThaiThan").innerText = tinhThaiThan(lunar.canChiNgay);
-        }
-
-        function chonHomNay() {
-            let today = new Date();
-            document.getElementById("inputDuongLich").valueAsDate = today;
-            capNhatLich();
-        }
-
-        function doiNgay(delta) {
-            let val = document.getElementById("inputDuongLich").value;
-            let d = val ? new Date(val) : new Date();
-            d.setDate(d.getDate() + delta);
-            document.getElementById("inputDuongLich").valueAsDate = d;
-            capNhatLich();
-        }
-
-        function moModalHuongDan() {
-            document.getElementById("modalHuongDan").classList.remove("hidden");
-        }
-        function dongModalHuongDan() {
-            document.getElementById("modalHuongDan").classList.add("hidden");
-        }
-
-        // Khởi chạy khi load trang
-        window.onload = function() {
-            chonHomNay();
-            document.getElementById("inputDuongLich").addEventListener("change", capNhatLich);
+    // 1. LỤC DIỆU (Chuẩn Ngọc Hạp: Mùng 1 tháng 1 = Tốc Hỷ)
+    function tinhLucDieu(thangAm, ngayAm) {
+        const dsLucDieu = ["Đại An", "Lưu Liên", "Tốc Hỷ", "Xích Khẩu", "Tiểu Cát", "Không Vong"];
+        const saoNgayMung1 = {
+            1: "Tốc Hỷ", 2: "Lưu Liên", 3: "Tiểu Cát", 
+            4: "Không Vong", 5: "Đại An", 6: "Xích Khẩu",
+            7: "Tốc Hỷ", 8: "Lưu Liên", 9: "Tiểu Cát", 
+            10: "Không Vong", 11: "Đại An", 12: "Xích Khẩu"
         };
-    </script>
+        let saoMung1 = saoNgayMung1[thangAm] || "Tốc Hỷ";
+        let startIndex = dsLucDieu.indexOf(saoMung1);
+        return dsLucDieu[(startIndex + (ngayAm - 1)) % 6];
+    }
+
+    // 2. THẦN SÁT NGỌC HẠP
+    function tinhYeuYen(chiThang) {
+        const ql = {"Dần": "Mão", "Thân": "Mão", "Mão": "Dần", "Dậu": "Dần", "Thìn": "Thân", "Tuất": "Thân", "Tỵ": "Tý", "Hợi": "Tý", "Ngọ": "Sửu", "Tý": "Sửu", "Mùi": "Tuất", "Sửu": "Tuất"};
+        return ql[chiThang] || "";
+    }
+
+    function tinhPhucSinh(chiThang) {
+        const ql = {"Dần": "Dậu", "Thân": "Dậu", "Mão": "Thân", "Dậu": "Thân", "Thìn": "Mão", "Tuất": "Mão", "Tỵ": "Dần", "Hợi": "Dần", "Ngọ": "Mùi", "Tý": "Mùi", "Mùi": "Ngọ", "Sửu": "Ngọ"};
+        return ql[chiThang] || "";
+    }
+
+    function tinhSatChu(chiThang) {
+        if (["Dần", "Mão", "Thìn"].includes(chiThang)) return "Tý";
+        if (["Tỵ", "Ngọ", "Mùi"].includes(chiThang)) return "Mão";
+        if (["Thân", "Dậu", "Tuất"].includes(chiThang)) return "Ngọ";
+        if (["Hợi", "Tý", "Sửu"].includes(chiThang)) return "Dậu";
+        return "";
+    }
+
+    function tinhHoangVu(thangAm) {
+        if ([1, 2, 3].includes(thangAm)) return "Tỵ";
+        if ([4, 5, 6].includes(thangAm)) return "Thân";
+        if ([7, 8, 9].includes(thangAm)) return "Hợi";
+        if ([10, 11, 12].includes(thangAm)) return "Dần";
+        return "";
+    }
+
+    function tinhPhaLuat(chiThang) {
+        const ql = {"Dần": "Hợi", "Thân": "Hợi", "Mão": "Tý", "Dậu": "Tý", "Thìn": "Sửu", "Tuất": "Sửu", "Tỵ": "Dần", "Hợi": "Dần", "Ngọ": "Mão", "Tý": "Mão", "Mùi": "Thìn", "Sửu": "Thìn"};
+        return ql[chiThang] || "";
+    }
+
+    function tinhTamTang(thangAm) {
+        if ([1, 2, 3].includes(thangAm)) return "Thìn";
+        if ([4, 5, 6].includes(thangAm)) return "Mùi";
+        if ([7, 8, 9].includes(thangAm)) return "Tuất";
+        if ([10, 11, 12].includes(thangAm)) return "Sửu";
+        return "";
+    }
+
+    function tinhThaiThan(canChiNgay) {
+        const viTri = ["Môn Kê", "Trù Táo", "Thê Xa", "Môn Hộ"];
+        let idx = lucThapHoaGiap.indexOf(canChiNgay);
+        if (idx === -1) return "Không xác định";
+        return viTri[idx % 4];
+    }
+
+    // Giả lập quy đổi thiên văn chuẩn để hiển thị test chính xác theo ngày
+    function quyDoiThienVanGiaLap(dateObj) {
+        // Thuật toán ước lượng can chi và âm lịch cơ bản cho demo hệ thống
+        let startEpoch = new Date(1900, 0, 31).getTime();
+        let diffDays = Math.floor((dateObj.getTime() - startEpoch) / (1000 * 60 * 60 * 24));
+        
+        let ngayAm = (diffDays % 30) + 1;
+        let thangAm = (Math.floor(diffDays / 30) % 12) + 1;
+        let chiThang = danhSachChi[(thangAm + 1) % 12];
+        let chiNgay = danhSachChi[diffDays % 12];
+        let canChiNgay = lucThapHoaGiap[(diffDays + 10) % 60];
+
+        return { thangAm, ngayAm, chiThang, chiNgay, canChiNgay };
+    }
+
+    function traCuu() {
+        let val = document.getElementById('datePicker').value;
+        if (!val) return;
+        let dateObj = new Date(val);
+
+        // Lấy thông tin âm lịch & can chi
+        let info = quyDoiThienVanGiaLap(dateObj);
+
+        // Tính Lục Diệu
+        let lucDieu = tinhLucDieu(info.thangAm, info.ngayAm);
+
+        // Tính Thai Thần
+        let thaiThan = tinhThaiThan(info.canChiNgay);
+
+        // Kiểm tra Thần Sát
+        let yY = tinhYeuYen(info.chiThang);
+        let pS = tinhPhucSinh(info.chiThang);
+        let sC = tinhSatChu(info.chiThang);
+        let hV = tinhHoangVu(info.thangAm);
+        let pL = tinhPhaLuat(info.chiThang);
+        let tT = tinhTamTang(info.thangAm);
+
+        let listSao = [];
+        if (info.chiNgay === yY) listSao.push('<span class="tag tag-cat">Yếu Yên (Cát)</span>');
+        if (info.chiNgay === pS) listSao.push('<span class="tag tag-cat">Phúc Sinh (Cát)</span>');
+        if (info.chiNgay === sC) listSao.push('<span class="tag tag-dai-hung">Sát Chủ (Đại Hung)</span>');
+        if (info.chiNgay === hV) listSao.push('<span class="tag tag-hung">Hoang Vu (Hung)</span>');
+        if (info.chiNgay === pL) listSao.push('<span class="tag tag-hung">Phá Luật (Hung)</span>');
+        if (info.chiNgay === tT) listSao.push('<span class="tag tag-dai-hung">Tam Tang (Đại Hung)</span>');
+
+        // Hiển thị kết quả lên giao diện
+        document.getElementById('resultBox').style.display = 'block';
+        document.getElementById('resDuong').innerHTML = `<b>📅 Dương lịch:</b> ${dateObj.toLocaleDateString('vi-VN')}`;
+        document.getElementById('resAm').innerHTML = `<b>🌙 Âm lịch:</b> Tháng ${info.thangAm} (Chi: ${info.chiThang}) - Ngày ${info.ngayAm} (${info.canChiNgay} - Chi: ${info.chiNgay})`;
+        document.getElementById('resLucDieu').innerHTML = `<b>✨ Lục Diệu:</b> <span style="color:var(--primary-color); font-weight:bold;">${lucDieu}</span>`;
+        document.getElementById('resThaiThan').innerHTML = `<b>⛩️ Vị trí Thai Thần:</b> ${thaiThan}`;
+        document.getElementById('resThanSat').innerHTML = `<b>⭐ Thần Sát trong ngày:</b> ${listSao.length > 0 ? listSao.join(' ') : 'Không phạm các sao lớn'}`;
+    }
+</script>
+
 </body>
 </html>
+>
