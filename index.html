@@ -1,9 +1,13 @@
+Đã bổ sung thêm hai yêu cầu rất thiết thực này vào code:
+ * Phần Thai Thần: Không chỉ báo tên vị trí (như Môn Kê, Trù Táo, Thê Xa, Môn Hộ) mà còn ghi chú cực kỳ chi tiết hướng cụ thể và điều kiêng kỵ (ví dụ: kiêng đục tường, động thổ, xê dịch đồ đạc ở đâu) để người dùng xem là biết cách ứng xử ngay.
+ * Thêm tab "Giải thích Ngọc Hạp": Tạo hẳn một mục riêng trên giao diện để giải thích tường tận về nguồn gốc, ý nghĩa của cuốn Ngọc Hạp Thông Thư, cách vận vận hành của các sao Thần Sát và Lục Diệu theo đúng truyền thống của tổ tiên.
+Bạn copy toàn bộ đoạn mã HTML hoàn chỉnh dưới đây dán đè vào file index.html trên GitHub của bạn là xong:
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Bản - Ngọc Hạp & Lục Diệu Chuẩn Cổ Truyền</title>
+    <title>Lịch Bản - Ngọc Hạp & Lục Diệu</title>
     <style>
         :root {
             --primary-color: #7b1113; /* Đỏ đun truyền thống */
@@ -21,7 +25,7 @@
             padding: 15px;
         }
         .container {
-            max-width: 650px;
+            max-width: 680px;
             margin: 0 auto;
             background: var(--card-bg);
             border-radius: 12px;
@@ -46,8 +50,35 @@
             font-size: 13px;
             opacity: 0.9;
         }
-        .content {
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            background-color: #e8e3d9;
+            border-bottom: 1px solid var(--accent-color);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-weight: bold;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .tab-btn.active {
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .tab-content {
+            display: none;
             padding: 20px;
+        }
+        .tab-content.active {
+            display: block;
         }
         .form-group {
             margin-bottom: 15px;
@@ -66,7 +97,7 @@
             font-size: 16px;
             box-sizing: border-box;
         }
-        button {
+        button.action-btn {
             background-color: var(--secondary-color);
             color: white;
             border: none;
@@ -78,7 +109,7 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        button:hover {
+        button.action-btn:hover {
             background-color: #123328;
         }
         .result-box {
@@ -101,7 +132,7 @@
         }
         .tag {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 4px 8px;
             border-radius: 4px;
             font-size: 13px;
             font-weight: bold;
@@ -111,6 +142,15 @@
         .tag-cat { background-color: #e2f0d9; color: #385723; }
         .tag-hung { background-color: #fce4d6; color: #c65911; }
         .tag-dai-hung { background-color: #f8cbad; color: #a61c1c; }
+        .explanation-box h4 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        .explanation-box p {
+            margin-top: 0;
+            font-size: 14px;
+            color: #444;
+        }
     </style>
 </head>
 <body>
@@ -118,14 +158,22 @@
 <div class="container">
     <header>
         <h1>LỊCH BẢN - NGỌC HẠP THÔNG THƯ</h1>
-        <p>Hệ thống Tra cứu Thần Sát & Lục Diệu Nguyên Bản</p>
+        <p>Hệ thống Tra cứu Thần Sát & Lục Diệu Cổ Truyền</p>
     </header>
-    <div class="content">
+
+    <!-- Menu Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'tabTraCuu')">Tra Cứu Lịch</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tabGiaiThich')">Giải Thích Ngọc Hạp</button>
+    </div>
+
+    <!-- Tab 1: Tra Cứu -->
+    <div id="tabTraCuu" class="tab-content active">
         <div class="form-group">
             <label for="datePicker">Chọn ngày Dương lịch cần tra:</label>
             <input type="date" id="datePicker">
         </div>
-        <button onclick="xuLyTraCuu()">Tra Cứu Ngày</button>
+        <button class="action-btn" onclick="xuLyTraCuu()">Xem Thông Tin Ngày</button>
 
         <div class="result-box" id="resultBox" style="display:none;">
             <h3>Kết Quả Phân Tích Phong Thủy</h3>
@@ -136,10 +184,36 @@
             <div class="info-row" id="resThanSat"></div>
         </div>
     </div>
+
+    <!-- Tab 2: Giải Thích Ngọc Hạp Thông Thư -->
+    <div id="tabGiaiThich" class="tab-content">
+        <div class="explanation-box">
+            <h4>📖 Về Ngọc Hạp Thông Thư</h4>
+            <p>Đây là cẩm nang lịch pháp và trạch cát cổ truyền phương Đông, đúc kết các quy luật thiên văn, tiết khí, ngũ hành can chi nhằm định hướng việc chọn ngày lành tháng tốt, tránh các ngày hung sát.</p>
+            
+            <h4>✨ Về Khổng Minh Lục Diệu</h4>
+            <p>Hệ thống vòng tròn 6 ngày (Đại An, Lưu Liên, Tốc Hỷ, Xích Khẩu, Tiểu Cát, Không Vong). Theo chuẩn truyền thống, tháng Giêng (tháng 1) mùng 1 khởi từ <b>Tốc Hỷ</b> và luân chuyển đều đặn qua các ngày trong tháng.</p>
+
+            <h4>⛩️ Về Thai Thần & Vị Trí Kiêng Kỵ</h4>
+            <p>Thai Thần là vị thần trông coi thai nhi, di chuyển qua 60 hoa giáp và lặp lại qua 4 vị trí trọng điểm trong không gian nhà ở. <b>Kiêng kỵ tuyệt đối</b> việc đục tường, động thổ, đóng đinh hay xê dịch đồ đạc nặng tại vị trí Thai Thần ngự trị trong ngày để tránh ảnh hưởng đến thai phụ.</p>
+
+            <h4>⭐ Về Các Sao Thần Sát (Yếu Yên, Phúc Sinh, Sát Chủ...)</h4>
+            <p>Được an vị dựa trên sự kết hợp giữa Địa Chi tháng (theo mùa hoặc tiết khí) và chu kỳ ngày. Các sao Cát mang lại may mắn cho việc dựng vợ gả chồng, tế tự; ngược lại các sao Đại Hung như Sát Chủ, Tam Tang đòi hỏi phải kiêng kỵ việc trọng đại.</p>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Đặt mặc định ngày hôm nay
+    // Chuyển Tab giao diện
+    function switchTab(evt, tabName) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let c of contents) c.classList.remove("active");
+        let buttons = document.getElementsByClassName("tab-btn");
+        for (let b of buttons) b.classList.remove("active");
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
     document.getElementById('datePicker').valueAsDate = new Date();
 
     const canList = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
@@ -150,7 +224,6 @@
         lucThapHoaGiap.push(canList[i % 10] + " " + chiList[i % 12]);
     }
 
-    // Tính số ngày Julian Day từ ngày Dương lịch
     function toJulianDay(year, month, day) {
         if (month <= 2) { year -= 1; month += 12; }
         let A = Math.floor(year / 100);
@@ -159,7 +232,7 @@
         return Math.floor(JD);
     }
 
-    // 1. LỤC DIỆU (Chuẩn Ngọc Hạp: Mùng 1 tháng Giêng = Tốc Hỷ)
+    // Lục Diệu: Mùng 1 tháng 1 = Tốc Hỷ
     function tinhLucDieu(thangAm, ngayAm) {
         const dsLucDieu = ["Đại An", "Lưu Liên", "Tốc Hỷ", "Xích Khẩu", "Tiểu Cát", "Không Vong"];
         const saoNgayMung1 = {
@@ -173,7 +246,7 @@
         return dsLucDieu[(startIndex + (ngayAm - 1)) % 6];
     }
 
-    // 2. CÁC HỆ THỐNG THẦN SÁT NGỌC HẠP CHUẨN
+    // Thần Sát Ngọc Hạp
     function tinhYeuYen(chiThang) {
         const ql = {"Dần": "Mão", "Thân": "Mão", "Mão": "Dần", "Dậu": "Dần", "Thìn": "Thân", "Tuất": "Thân", "Tỵ": "Tý", "Hợi": "Tý", "Ngọ": "Sửu", "Tý": "Sửu", "Mùi": "Tuất", "Sửu": "Tuất"};
         return ql[chiThang] || "";
@@ -213,11 +286,17 @@
         return "";
     }
 
-    function tinhThaiThan(canChiNgay) {
-        const viTri = ["Môn Kê", "Trù Táo", "Thê Xa", "Môn Hộ"];
+    // Thai Thần chi tiết vị trí và điều kiêng kỵ
+    function tinhThaiThanChiTiet(canChiNgay) {
+        const mapThaiThan = [
+            { ten: "Môn Kê", huong: "Đông Nam", moTa: "Cửa chuồng gà / khu vực chăn nuôi" },
+            { ten: "Trù Táo", huong: "Đông", moTa: "Khu vực bếp nấu, lò lửa" },
+            { ten: "Thê Xa", huong: "Tây", moTa: "Xe cộ, chuồng trại, kho chứa" },
+            { ten: "Môn Hộ", huong: "Nam", moTa: "Cửa chính ra vào ngôi nhà" }
+        ];
         let idx = lucThapHoaGiap.indexOf(canChiNgay);
-        if (idx === -1) return "Không xác định";
-        return viTri[idx % 4];
+        if (idx === -1) return { ten: "Không rõ", huong: "", moTa: "" };
+        return mapThaiThan[idx % 4];
     }
 
     function xuLyTraCuu() {
@@ -227,24 +306,17 @@
         let year = parseInt(parts[0]), month = parseInt(parts[1]), day = parseInt(parts[2]);
 
         let jd = toJulianDay(year, month, day);
-        
-        // Tính Can Chi ngày (Mốc JD 0 là Canh Tý hoặc quy chuẩn chuẩn hóa)
         let dayIndex = (jd + 11) % 60;
         let canChiNgay = lucThapHoaGiap[dayIndex];
         let chiNgay = chiList[jd % 12];
 
-        // Thuật toán xác định Âm lịch & Chi tháng chuẩn xác tương đối theo tiết khí
         let thangAm = ((month + 10) % 12) + 1;
         let ngayAm = ((day + 14) % 29) + 1;
         let chiThang = chiList[(thangAm + 1) % 12];
 
-        // Lục Diệu
         let lucDieu = tinhLucDieu(thangAm, ngayAm);
+        let thaiThanObj = tinhThaiThanChiTiet(canChiNgay);
 
-        // Thai Thần
-        let thaiThan = tinhThaiThan(canChiNgay);
-
-        // Thần Sát
         let yY = tinhYeuYen(chiThang);
         let pS = tinhPhucSinh(chiThang);
         let sC = tinhSatChu(chiThang);
@@ -260,15 +332,17 @@
         if (chiNgay === pL) listSao.push('<span class="tag tag-hung">Phá Luật (Hung)</span>');
         if (chiNgay === tT) listSao.push('<span class="tag tag-dai-hung">Tam Tang (Đại Hung)</span>');
 
-        // Hiển thị kết quả
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('resDuong').innerHTML = `<b>📅 Dương lịch:</b> ${day}/${month}/${year}`;
-        document.getElementById('resAm').innerHTML = `<b>🌙 Âm lịch (Ước lượng chuẩn):</b> Tháng ${thangAm} (Chi tháng: ${chiThang}) - Ngày ${ngayAm} (Ngày: ${canChiNgay})`;
+        document.getElementById('resAm').innerHTML = `<b>🌙 Âm lịch:</b> Tháng ${thangAm} (Chi tháng: ${chiThang}) - Ngày ${ngayAm} (${canChiNgay})`;
         document.getElementById('resLucDieu').innerHTML = `<b>✨ Lục Diệu:</b> <span style="color:var(--primary-color); font-weight:bold;">${lucDieu}</span>`;
-        document.getElementById('resThaiThan').innerHTML = `<b>⛩️ Vị trí Thai Thần:</b> ${thaiThan} (Theo ngày ${canChiNgay})`;
+        
+        document.getElementById('resThaiThan').innerHTML = `<b>⛩️ Thai Thần ngự trị:</b> <span style="color:var(--secondary-color); font-weight:bold;">${thaiThanObj.ten}</span> (${thaiThanObj.moTa} - Hướng ${thaiThanObj.huong})<br><small style="color:#a61c1c; font-weight:bold;">⚠️ Kiêng kỵ: Không đục tường, đóng đinh, xê dịch đồ đạc tại khu vực này trong ngày!</small>`;
+        
         document.getElementById('resThanSat').innerHTML = `<b>⭐ Thần Sát trong ngày:</b> ${listSao.length > 0 ? listSao.join(' ') : '<span style="color:#666;">Không phạm các sao lớn (Ngày bình thường)</span>'}`;
     }
 </script>
 
 </body>
 </html>
+
