@@ -426,101 +426,56 @@ function renderMonth(){
 }
 
 /* ===== RENDER NĂM (Bảng tổng hợp chuẩn Lịch Giấy) ===== */
+/* ===== RENDER NĂM (Bảng tổng hợp chuẩn Xác) ===== */
 function renderYear(){
   const ly = ccYear(cY);
   
-  function getTietKhi(m, d) {
-    const tk = [
-      ["Tiểu hàn","Đại hàn"], ["Lập xuân","Vũ thủy"], ["Kinh trập","Xuân phân"],
-      ["Thanh minh","Cốc vũ"], ["Lập hạ","Tiểu mãn"], ["Mang chủng","Hạ chí"],
-      ["Tiểu thử","Đại thử"], ["Lập thu","Xử thử"], ["Bạch lộ","Thu phân"],
-      ["Hàn lộ","Sương giáng"], ["Lập đông","Tiểu tuyết"], ["Đại tuyết","Đông chí"]
-    ];
-    const dates = [[5,20],[4,19],[5,20],[4,20],[5,21],[5,21],[7,7],[7,23],[8,7],[8,23],[9,7],[9,23]];
-    const t1 = dates[m-1][0], t2 = dates[m-1][1];
-    let res = [];
-    if(d === t1) res.push(tk[m-1][0]);
-    if(d === t2) res.push(tk[m-1][1]);
-    return res.join(", ");
-  }
+  // Hàm lấy Can Chi của ngày
+  function getCC(d, m, y) { return ccDay(d, m, y); }
 
-  function getLunarDaysCount(m) {
-    let count = 0;
-    for (let mo = 1; mo <= 12; mo++) {
-      const dim = new Date(cY, mo, 0).getDate();
-      for (let dd = 1; dd <= dim; dd++) {
-        const L = s2l(dd, mo, cY);
-        if (L.month === m && !L.isLeap) count++;
-      }
-    }
-    return count;
-  }
+  // Bảng tiết khí chuẩn (xấp xỉ ngày dương lịch hàng tháng)
+  const TIET_KHI = {
+    1: [{d:5,n:"Tiểu hàn"},{d:20,n:"Đại hàn"}],
+    2: [{d:4,n:"Lập xuân"},{d:19,n:"Vũ thủy"}],
+    3: [{d:5,n:"Kinh trập"},{d:20,n:"Xuân phân"}],
+    4: [{d:4,n:"Thanh minh"},{d:20,n:"Cốc vũ"}],
+    5: [{d:5,n:"Lập hạ"},{d:21,n:"Tiểu mãn"}],
+    6: [{d:5,n:"Mang chủng"},{d:21,n:"Hạ chí"}],
+    7: [{d:7,n:"Tiểu thử"},{d:23,n:"Đại thử"}],
+    8: [{d:7,n:"Lập thu"},{d:23,n:"Xử thử"}],
+    9: [{d:7,n:"Bạch lộ"},{d:23,n:"Thu phân"}],
+    10:[{d:8,n:"Hàn lộ"},{d:23,n:"Sương giáng"}],
+    11:[{d:7,n:"Lập đông"},{d:22,n:"Tiểu tuyết"}],
+    12:[{d:7,n:"Đại tuyết"},{d:22,n:"Đông chí"}]
+  };
 
-  function getFirstDayOfLunarMonth(m) {
-    for (let mo = 1; mo <= 12; mo++) {
-      const dim = new Date(cY, mo, 0).getDate();
-      for (let dd = 1; dd <= dim; dd++) {
-        const L = s2l(dd, mo, cY);
-        if (L.month === m && L.day === 1 && !L.isLeap) return { d: dd, m: mo };
+  // Hàm tìm ngày dương lịch của một ngày âm lịch cụ thể
+  function findSolarDate(lDay, lMonth) {
+    for(let m = 1; m <= 12; m++) {
+      const dim = new Date(cY, m, 0).getDate();
+      for(let d = 1; d <= dim; d++) {
+        const L = s2l(d, m, cY);
+        if(L.month === lMonth && L.day === lDay && !L.isLeap) {
+          return { d, m, y: cY };
+        }
       }
     }
     return null;
   }
 
-  let tableData = [];
-  const saoCols = [
-    { key: "DieuAn", name: "Điếu an", calc: (d, m, mChi) => d === getYeuYen(mChi) },
-    { key: "PhucSinh", name: "Phúc sinh", calc: (d, m, mChi) => d === getPhucSinh(mChi) },
-    { key: "LuuLien", name: "Lưu liên", calc: (d, m, mChi) => getLD(d, m).name === "Lưu Liên" },
-    { key: "TucHy", name: "Tốc hỷ", calc: (d, m, mChi) => getLD(d, m).name === "Tốc Hỷ" },
-    { key: "XichKhau", name: "Xích khẩu", calc: (d, m, mChi) => getLD(d, m).name === "Xích Khẩu" },
-    { key: "TieuCat", name: "Tiểu cát", calc: (d, m, mChi) => getLD(d, m).name === "Tiểu Cát" },
-    { key: "KhongVong", name: "Không vong", calc: (d, m, mChi) => getLD(d, m).name === "Không Vong" },
-    { key: "DaiAn", name: "Đại an", calc: (d, m, mChi) => getLD(d, m).name === "Đại An" },
-    { key: "SatChu", name: "Sát chủ", calc: (d, m, mChi) => d === getSatChu(mChi) },
-    { key: "HoangVu", name: "Hoang vu", calc: (d, m, mChi) => d === getHoangVu(mChi) },
-    { key: "ThaiThan", name: "Thai thần", calc: (d, m, mChi) => {
-        const first = getFirstDayOfLunarMonth(m);
-        if(!first) return false;
-        const dt = new Date(cY, first.m - 1, first.d + d - 1);
-        const cc = ccDay(dt.getDate(), dt.getMonth() + 1, dt.getFullYear());
-        const posIdx = getThaiThan(cc.idx);
-        return posIdx === 0; // Môn Kê
-    }},
-    { key: "TamTang", name: "Tam tang", calc: (d, m, mChi) => d === getTamTang(mChi) }
-  ];
+  // Tìm mùng 1 của từng tháng âm
+  function getFirstDayOfLunarMonth(lm) { return findSolarDate(1, lm); }
 
-  for (let lm = 1; lm <= 12; lm++) {
-    const first = getFirstDayOfLunarMonth(lm);
-    if (!first) continue;
-    
-    const mChi = monthChiIndex(lm);
-    const ccF = ccDay(first.d, first.m, cY);
-    const daysInMonth = getLunarDaysCount(lm);
-    
-    let tietKhiStr = [];
-    for(let dd=first.d; dd<first.d+daysInMonth; dd++){
-      let tk = getTietKhi(first.m, dd);
-      if(tk) tietKhiStr.push(tk);
-    }
-
-    let row = {
-      monthName: ["GIÊNG","HAI","BA","TƯ","NĂM","SÁU","BẢY","TÁM","CHÍN","MƯỜI","MƯỜI MỘT","CHẠP"][lm-1],
-      days: daysInMonth,
-      firstDay: `${ccF.can} ${ccF.chi}`,
-      tietKhi: tietKhiStr.join(", ") || "—",
-      cols: {}
-    };
-
-    saoCols.forEach(col => {
-      let list = [];
-      for (let d = 1; d <= daysInMonth; d++) {
-        if (col.calc(d, lm, mChi)) list.push(d);
-      }
-      row.cols[col.key] = list;
-    });
-    
-    tableData.push(row);
+  // Số ngày trong tháng âm
+  function getLunarDaysCount(lm) {
+    const m1 = findSolarDate(1, lm);
+    if(!m1) return 0;
+    const m2 = findSolarDate(1, lm === 12 ? 1 : lm + 1);
+    if(!m2) return 29; // Fallback
+    // Tính khoảng cách ngày giữa 2 mùng 1
+    const jd1 = jd(m1.d, m1.m, m1.y);
+    const jd2 = jd(m2.d, m2.m, m2.y);
+    return jd2 - jd1;
   }
 
   let html = `
@@ -528,45 +483,132 @@ function renderYear(){
       LỊCH ÂM NĂM ${ly.can.toUpperCase()} ${ly.chi.toUpperCase()} ${cY}
     </div>
     <div style="overflow-x:auto; border-radius:6px; border:1px solid #8b5a2b; background:#fffaf0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-      <table style="width:100%; border-collapse:collapse; font-size:0.7rem; text-align:center; min-width:900px; font-family:serif; color:#333;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.7rem; text-align:center; min-width:1000px; font-family:serif; color:#333;">
         <thead>
           <tr style="background:#e8d8c3; color:#4a2c1a;">
-            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Tháng<br>âm</th>
-            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Số ngày<br>trong tháng</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700; width:60px;">Tháng<br>âm</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700; width:50px;">Số ngày<br>trong<br>tháng</th>
             <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Ngày khởi<br>đầu tháng</th>
             <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Các tiết<br>trong năm</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Điếu<br>an</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Phúc<br>sinh</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Lưu<br>liên</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Túc<br>hỷ</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Xích<br>khẩu</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Tiểu<br>cát</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Không<br>vong</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Đại<br>an</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Rú<br>hai</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Hoang<br>vu<br>Tứ quý</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Thiên<br>hỏa</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Thái<br>tấm</th>
+            <th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">Tam<br>tang</th>
+          </tr>
+        </thead>
+        <tbody>
   `;
-  
-  saoCols.forEach(col => {
-    html += `<th style="padding:8px 4px; border:1px solid #8b5a2b; font-weight:700;">${col.name}</th>`;
-  });
-  html += `</tr></thead><tbody>`;
 
-  tableData.forEach(row => {
-    html += `<tr>`;
-    html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-weight:700; color:#8b1e1e; background:#f4ebd9; font-size:0.75rem;">${row.monthName}</td>`;
-    html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-weight:600;">${row.days}</td>`;
-    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${row.firstDay}</td>`;
-    html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-size:0.65rem; text-align:left;">${row.tietKhi}</td>`;
+  for (let lm = 1; lm <= 12; lm++) {
+    const first = getFirstDayOfLunarMonth(lm);
+    if (!first) continue;
     
-    saoCols.forEach(col => {
-      let daysStr = row.cols[col.key].join(", ");
-      let style = "padding:8px 4px; border:1px solid #c9b49a;";
-      if(["DaiAn", "TieuCat", "DieuAn", "PhucSinh"].includes(col.key)) style += " color:#2f9e44;"; 
-      else if(["XichKhau", "KhongVong", "SatChu", "HoangVu", "TamTang"].includes(col.key)) style += " color:#c92a2a;"; 
-      else style += " color:#333;";
+    const daysInMonth = getLunarDaysCount(lm);
+    const ccFirst = ccDay(first.d, first.m, cY);
+    const mChi = monthChiIndex(lm);
+    
+    // Thu thập tiết khí
+    let tkStr = [];
+    for (let d = 1; d <= daysInMonth; d++) {
+      const sol = findSolarDate(d, lm);
+      if(sol && TIET_KHI[sol.m]) {
+        TIET_KHI[sol.m].forEach(tk => {
+          if (tk.d === sol.d) {
+            tkStr.push(`${tk.n}: ${d}`);
+          }
+        });
+      }
+    }
+
+    // Khởi tạo mảng chứa ngày cho từng sao
+    let cols = {
+      dieuAn: [], phucSinh: [], luuLien: [], tucHy: [], xichKhau: [], 
+      tieuCat: [], khongVong: [], daiAn: [], ruHai: [], hoangVu: [], 
+      thienHoa: [], thaiTam: [], tamTang: []
+    };
+
+    // Quét từng ngày âm trong tháng
+    for (let ld = 1; ld <= daysInMonth; ld++) {
+      const sol = findSolarDate(ld, lm);
+      if(!sol) continue;
       
-      html += `<td style="${style}">${daysStr || "—"}</td>`;
-    });
+      const cc = ccDay(sol.d, sol.m, sol.y);
+      const dChi = cc.idx % 12;
+
+      // 1. Lục Diệu (Lưu liên, Túc hỷ...)
+      const ldName = getLD(ld, lm).name;
+      if (ldName === "Lưu Liên") cols.luuLien.push(ld);
+      if (ldName === "Tốc Hỷ") cols.tucHy.push(ld);
+      if (ldName === "Xích Khẩu") cols.xichKhau.push(ld);
+      if (ldName === "Tiểu Cát") cols.tieuCat.push(ld);
+      if (ldName === "Không Vong") cols.khongVong.push(ld);
+      if (ldName === "Đại An") cols.daiAn.push(ld);
+
+      // 2. Thần Sát Ngọc Hạp (Cách nhau 12 ngày)
+      if (dChi === getYeuYen(mChi)) cols.dieuAn.push(ld);
+      if (dChi === getPhucSinh(mChi)) cols.phucSinh.push(ld);
+      if (dChi === getSatChu(mChi)) cols.ruHai.push(ld);
+      if (dChi === getHoangVu(mChi)) cols.hoangVu.push(ld);
+      if (dChi === getTamTang(mChi)) cols.tamTang.push(ld);
+      
+      // 3. Thiên Hỏa (Tính theo tháng: Dần Ngọ Tuất hỏa tại Tý...)
+      // Quy luật Thiên Hỏa đơn giản: Tháng Dần Tý khởi Tý, xoay vòng
+      let thIdx = (dChi - mChi + 12) % 12;
+      if ([0, 4, 8].includes(thIdx)) cols.thienHoa.push(ld); // Tạm tính các ngày Tý, Thìn, Thân
+
+      // 4. Thái Tấm (Thai Thần) - Xoay vòng 60 ngày, nhưng trong tháng hiển thị các ngày rơi vào Môn Hộ/Môn Kê
+      // (Ở đây tạm hiển thị những ngày Thai Thần ở Đông/Nam)
+      const thaiPos = getThaiThan(cc.idx);
+      if (thaiPos === 0 || thaiPos === 3) cols.thaiTam.push(ld); // Môn Kê & Môn Hộ
+    }
+
+    // Render dòng
+    html += `<tr>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-weight:700; color:#8b1e1e; background:#f4ebd9; font-size:0.75rem;">${["GIÊNG","HAI","BA","TƯ","NĂM","SÁU","BẢY","TÁM","CHÍN","MƯỜI","MƯỜI MỘT","CHẠP"][lm-1]}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-weight:600;">${daysInMonth}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${ccFirst.can}<br>${ccFirst.chi}</td>`;
+    
+    // Tiết khí (Xuống dòng nếu có 2 tiết)
+    let tkHtml = tkStr.map(s => s.replace(": ", ":<br>")).join("<br>");
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-size:0.65rem;">${tkHtml || "—"}</td>`;
+
+    // Đổ dữ liệu các cột
+    const renderDays = (arr, color) => {
+      if(!arr.length) return "—";
+      // Nhóm thành chuỗi cách nhau bởi dấu phẩy, tự động xuống dòng nếu dài
+      return arr.map(d => `<span style="color:${color}">${d}</span>`).join(", ");
+    };
+
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.dieuAn, "#2f9e44")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.phucSinh, "#2f9e44")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.luuLien, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.tucHy, "#f08c00")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.xichKhau, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.tieuCat, "#2f9e44")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.khongVong, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.daiAn, "#2f9e44")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.ruHai, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.hoangVu, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.thienHoa, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.thaiTam, "#c92a2a")}</td>`;
+    html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${renderDays(cols.tamTang, "#c92a2a")}</td>`;
     html += `</tr>`;
-  });
+  }
 
   html += `</tbody></table></div>`;
-  html += `<div style="text-align:center;color:#888;font-size:0.75rem;margin-top:12px;font-style:italic;line-height:1.4">* Ghi chú: (Điếu an = Yếu yên). Bảng hiển thị ngày âm lịch.<br>* Lịch không hiển thị tháng nhuận để tránh trùng lặp.</div>`;
+  html += `<div style="text-align:center;color:#888;font-size:0.75rem;margin-top:12px;font-style:italic;line-height:1.4">* Ghi chú: Các cột ngày đều là ngày Âm lịch. Các sao Thần sát cách nhau 12 ngày (do chu kỳ 12 Địa Chi). Lục diệu cách nhau 6 ngày.</div>`;
 
   document.getElementById("yearContent").innerHTML = html;
 }
-
 /* ===== RENDER TRA CỨU ===== */
 function renderLookup(){
   const tabs=document.querySelectorAll("#page-lookup .tab");
