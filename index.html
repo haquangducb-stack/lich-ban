@@ -181,7 +181,7 @@ body{font-family:'Segoe UI',Roboto,system-ui,sans-serif;background:#f5f0e8;color
 <!-- TRANG NĂM -->
 <div class="page" id="page-year">
   <div class="deco">
-    <div id="yearContent" style="overflow-x: auto;"></div>
+    <div id="yearContent"></div>
     <div class="disclaimer">Thông tin chỉ mang tính chất tham khảo, không nên mê tín dị đoan.</div>
   </div>
 </div>
@@ -208,8 +208,10 @@ body{font-family:'Segoe UI',Roboto,system-ui,sans-serif;background:#f5f0e8;color
 </div>
 
 <script>
-/* ===== BẢNG ÂM LỊCH 1900–2100 ===== */
-const LUNAR_INFO=[
+/* =====================================================================
+   BẢNG ÂM LỊCH 1900–2100 (201 phần tử)
+   ===================================================================== */
+const LUNAR_INFO = [
 0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
 0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
 0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
@@ -230,7 +232,8 @@ const LUNAR_INFO=[
 0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,
 0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,
 0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,
-0x0d520];
+0x0d520
+];
 
 const CAN=["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
 const CHI=["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
@@ -246,14 +249,17 @@ const LD_MEANING={
   "Không Vong":{title:"Trống rỗng, bất lợi",desc:"Kiêng khởi sự, xuất hành, ký kết"}
 };
 
-/* ===== THUẬT TOÁN LỊCH ===== */
-function jd(d,m,y){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
-let j=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
-if(j<2299161)j=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-32083;return j;}
+function jd(d,m,y){
+  const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
+  let j=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
+  if(j<2299161)j=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-32083;
+  return j;
+}
 function leapM(y){return LUNAR_INFO[y-1900]&0xf;}
 function leapMD(y){return leapM(y)?((LUNAR_INFO[y-1900]&0x10000)?30:29):0;}
 function mDays(y,m){return (LUNAR_INFO[y-1900]&(0x10000>>m))?30:29;}
 function yDays(y){let s=348;for(let i=0x8000;i>0x8;i>>=1)s+=(LUNAR_INFO[y-1900]&i)?1:0;return s+leapMD(y);}
+
 function s2l(d,m,y){
   if(y<1900||y>2100)return{day:d,month:m,year:y,isLeap:false,oor:true};
   let off=jd(d,m,y)-jd(31,1,1900),i,t=0;
@@ -270,11 +276,35 @@ function s2l(d,m,y){
   if(off<0){off+=t;--i;}
   return{day:off+1,month:i,year:ly,isLeap:isL,oor:false};
 }
-function ccDay(d,m,y){const idx=((jd(d,m,y)+9)%60+60)%60;return{can:CAN[idx%10],chi:CHI[idx%12],idx};}
+
+function ccDay(d,m,y){
+  // Mốc Julian Day 0 (1/1/4713 TCN) 
+  // Công thức chuẩn tìm Can Chi:
+  const j = jd(d,m,y);
+  const idx = ((j + 49) % 60 + 60) % 60; // +49 để khớp mốc Giáp Tý
+  return {can: CAN[idx%10], chi: CHI[idx%12], idx: idx};
+}
+
 function ccYear(ly){return{can:CAN[((ly-4)%10+10)%10],chi:CHI[((ly-4)%12+12)%12]};}
-function ccMonth(lm,ly){const yc=((ly-4)%10+10)%10;const bc=[2,4,6,8,0][yc%5];
-return{can:CAN[(bc+lm-1)%10],chi:CHI[(lm+1)%12]};}
-function getLD(ld,lm){const i=((LD_M1[(lm-1)%12]+ld-1)%6+6)%6;return{name:LD[i],idx:i,status:LD_STATUS[LD[i]]};}
+function ccMonth(lm,ly){
+  const yc=((ly-4)%10+10)%10;
+  const bc=[2,4,6,8,0][yc%5];
+  return{can:CAN[(bc+lm-1)%10],chi:CHI[(lm+1)%12]};
+}
+
+function getLD(ld,lm){
+  const i=((LD_M1[(lm-1)%12]+ld-1)%6+6)%6;
+  return{name:LD[i],idx:i,status:LD_STATUS[LD[i]]};
+}
+
+function getYeuYen(mChi){const map={2:3,8:3,3:2,9:2,4:8,10:8,5:0,11:0,6:1,0:1,7:10,1:10};return map[mChi];}
+function getPhucSinh(mChi){const map={2:9,8:9,3:8,9:8,4:3,10:3,5:2,11:2,6:7,0:7,7:6,1:6};return map[mChi];}
+function getSatChu(mChi){if(mChi>=2&&mChi<=4)return 0;if(mChi>=5&&mChi<=7)return 3;if(mChi>=8&&mChi<=10)return 6;return 9;}
+function getHoangVu(mChi){if(mChi>=2&&mChi<=4)return 5;if(mChi>=5&&mChi<=7)return 8;if(mChi>=8&&mChi<=10)return 11;return 2;}
+function getTamTang(mChi){if(mChi>=2&&mChi<=4)return 4;if(mChi>=5&&mChi<=7)return 7;if(mChi>=8&&mChi<=10)return 10;return 1;}
+function monthChiIndex(lm){return (lm+1)%12;}
+function getThaiThan(ccIdx){return ((ccIdx%4)+4)%4;}
+
 function getDayInfo(d,m,y){
   const lun=s2l(d,m,y);
   const cc=ccDay(d,m,y);
@@ -283,16 +313,6 @@ function getDayInfo(d,m,y){
   const ld=getLD(lun.day,lun.month);
   return{solar:{d,m,y},lun,cc,cy,cm,ld};
 }
-
-/* ===== THẦN SÁT ===== */
-function monthChiIndex(lm){return (lm+1)%12;}
-function getYeuYen(mChi){const map={2:3,8:3,3:2,9:2,4:8,10:8,5:0,11:0,6:1,0:1,7:10,1:10};return map[mChi];}
-function getPhucSinh(mChi){const map={2:9,8:9,3:8,9:8,4:3,10:3,5:2,11:2,6:7,0:7,7:6,1:6};return map[mChi];}
-function getSatChu(mChi){if(mChi>=2&&mChi<=4)return 0;if(mChi>=5&&mChi<=7)return 3;if(mChi>=8&&mChi<=10)return 6;return 9;}
-function getHoangVu(mChi){if(mChi>=2&&mChi<=4)return 5;if(mChi>=5&&mChi<=7)return 8;if(mChi>=8&&mChi<=10)return 11;return 2;}
-function getPhaLuat(mChi){const map={2:11,8:11,3:0,9:0,4:1,10:1,5:2,11:2,6:3,0:3,7:4,1:4};return map[mChi];}
-function getTamTang(mChi){if(mChi>=2&&mChi<=4)return 4;if(mChi>=5&&mChi<=7)return 7;if(mChi>=8&&mChi<=10)return 10;return 1;}
-function getThaiThan(dayCCIndex){return ((dayCCIndex % 4) + 4) % 4;}
 
 /* ===== STATE ===== */
 const TODAY=new Date();
@@ -305,7 +325,6 @@ let lookupJob="Khai trương";
 function pad(n){return n<10?"0"+n:""+n;}
 function isToday(d,m,y){return d===TODAY.getDate()&&m===TODAY.getMonth()+1&&y===TODAY.getFullYear();}
 
-/* ===== RENDER NGÀY ===== */
 function renderDay(){
   const d=cD,m=cM+1,y=cY;
   const info=getDayInfo(d,m,y);
@@ -362,7 +381,6 @@ function toggleGhichu(){
   document.getElementById("ghichuBody").classList.toggle("show");
 }
 
-/* ===== RENDER TUẦN ===== */
 function renderWeek(){
   const base=new Date(cY,cM,cD);
   const start=new Date(base);
@@ -380,7 +398,7 @@ function renderWeek(){
         <div class="title">${days[dt.getDay()]} - Ngày ${info.lun.day}/${info.lun.month} (Âm)</div>
         <div class="tag">${stLabel}</div>
       </div>
-      <div class="sub">Dương lịch: ${pad(d)}/${pad(m)}/${y}</div>
+      <div class="sub">Dương lịch: ${pad(d)}/${pad(m)}/${y} · ${info.cc.can} ${info.cc.chi}</div>
       <div class="ld">Lục Diệu: ${info.ld.name}</div>
     </div>`;
   }
@@ -388,7 +406,6 @@ function renderWeek(){
 }
 function jumpToDay(d,m,y){cD=d;cM=m-1;cY=y;sel={d,m,y};setPage("day");render();}
 
-/* ===== RENDER THÁNG ===== */
 function renderMonth(){
   const first=new Date(cY,cM,1).getDay();
   const dim=new Date(cY,cM+1,0).getDate();
@@ -425,11 +442,10 @@ function renderMonth(){
   `;
 }
 
-/* ===== RENDER NĂM (Bảng tổng hợp chuẩn Xác - Đã sửa Can Chi) ===== */
+/* ===== RENDER NĂM (Bảng tổng hợp chuẩn Xác) ===== */
 function renderYear(){
   const ly = ccYear(cY);
   
-  // Bảng tiết khí (ngày dương lịch xấp xỉ)
   const TIET_KHI = {
     1: [{d:5,n:"Tiểu hàn"},{d:20,n:"Đại hàn"}],
     2: [{d:4,n:"Lập xuân"},{d:19,n:"Vũ thủy"}],
@@ -529,7 +545,6 @@ function renderYear(){
       const cc = ccDay(sol.d, sol.m, sol.y);
       const dChi = cc.idx % 12;
 
-      // 1. Lục Diệu
       const ldName = getLD(ld, lm).name;
       if (ldName === "Lưu Liên") cols.luuLien.push(ld);
       if (ldName === "Tốc Hỷ") cols.tucHy.push(ld);
@@ -538,18 +553,15 @@ function renderYear(){
       if (ldName === "Không Vong") cols.khongVong.push(ld);
       if (ldName === "Đại An") cols.daiAn.push(ld);
 
-      // 2. Thần Sát
       if (dChi === getYeuYen(mChi)) cols.dieuAn.push(ld);
       if (dChi === getPhucSinh(mChi)) cols.phucSinh.push(ld);
       if (dChi === getSatChu(mChi)) cols.ruHai.push(ld);
       if (dChi === getHoangVu(mChi)) cols.hoangVu.push(ld);
       if (dChi === getTamTang(mChi)) cols.tamTang.push(ld);
       
-      // 3. Thiên Hỏa
       let thIdx = (dChi - mChi + 12) % 12;
       if ([0, 4, 8].includes(thIdx)) cols.thienHoa.push(ld); 
 
-      // 4. Thái Tấm
       const thaiPos = getThaiThan(cc.idx);
       if (thaiPos === 0 || thaiPos === 3) cols.thaiTam.push(ld); 
     }
@@ -557,8 +569,6 @@ function renderYear(){
     html += `<tr>`;
     html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-weight:700; color:#8b1e1e; background:#f4ebd9; font-size:0.75rem;">${["GIÊNG","HAI","BA","TƯ","NĂM","SÁU","BẢY","TÁM","CHÍN","MƯỜI","MƯỜI MỘT","CHẠP"][lm-1]}</td>`;
     html += `<td style="padding:8px 4px; border:1px solid #c9b49a; font-weight:600;">${daysInMonth}</td>`;
-    
-    // Sửa lại hiển thị Can Chi: Nếu là Nhâm Tuất thì hiện đúng Nhâm Tuất
     html += `<td style="padding:8px 4px; border:1px solid #c9b49a;">${ccFirst.can}<br>${ccFirst.chi}</td>`;
     
     let tkHtml = tkStr.map(s => s.replace(": ", ":<br>")).join("<br>");
@@ -586,18 +596,69 @@ function renderYear(){
   }
 
   html += `</tbody></table></div>`;
-  html += `<div style="text-align:center;color:#888;font-size:0.75rem;margin-top:12px;font-style:italic;line-height:1.4">* Ngày khởi đầu tháng đã được sửa lại theo đúng chuẩn Julian Day (Tết Bính Ngọ 2026 là Nhâm Tuất).</div>`;
+  html += `<div style="text-align:center;color:#888;font-size:0.75rem;margin-top:12px;font-style:italic;line-height:1.4">* Ngày khởi đầu tháng đã được sửa theo chuẩn Can Chi (Tết Bính Ngọ 2026 là Nhâm Tuất).</div>`;
 
   document.getElementById("yearContent").innerHTML = html;
 }
 
-/* ===== CHUYỂN TRANG ===== */
+function renderLookup(){
+  const tabs=document.querySelectorAll("#page-lookup .tab");
+  tabs.forEach(t=>t.classList.toggle("active",t.dataset.lt===lookupTab));
+  
+  if(lookupTab==="ngaydep"){
+    document.getElementById("lookupBody").innerHTML=`
+      <div style="color:#3b5bdb;font-weight:700;margin-bottom:8px">Chọn việc cần làm:</div>
+      <div class="dropdown">
+        <select id="jobSelect" onchange="lookupJob=this.value;renderLookup()">
+          <option${lookupJob==="Khai trương"?" selected":""}>Khai trương</option>
+          <option${lookupJob==="Cưới hỏi"?" selected":""}>Cưới hỏi</option>
+          <option${lookupJob==="Xuất hành"?" selected":""}>Xuất hành</option>
+          <option${lookupJob==="Ký kết"?" selected":""}>Ký kết</option>
+          <option${lookupJob==="Động thổ"?" selected":""}>Động thổ</option>
+        </select>
+      </div>
+      <div id="lookupResult"></div>
+    `;
+    const dim=new Date(cY,cM+1,0).getDate();
+    const results=[];
+    for(let d=1;d<=dim;d++){
+      const info=getDayInfo(d,cM+1,cY);
+      let ok=false;
+      if(info.ld.status==="tot")ok=true;
+      if(lookupJob==="Cưới hỏi"&&info.ld.name==="Đại An")ok=true;
+      if(lookupJob==="Xuất hành"&&(info.ld.name==="Tốc Hỷ"||info.ld.name==="Tiểu Cát"))ok=true;
+      if(ok)results.push({d,ld:info.ld.name});
+    }
+    const rh=results.map(r=>`<div class="result-item">
+      <div class="num">Ngày ${r.d}</div>
+      <div class="txt">Rất tốt cho ${lookupJob} — Lục Diệu: ${r.ld}</div>
+    </div>`).join("");
+    document.getElementById("lookupResult").innerHTML=`
+      <div style="color:#3b5bdb;font-weight:700;margin:14px 0 8px">Kết quả Tháng ${cM+1} Năm ${cY}:</div>
+      ${rh||'<div style="color:#888;font-size:.85rem">Không có ngày phù hợp trong tháng.</div>'}
+    `;
+  } else {
+    let html=`<div style="text-align:center;color:#3b5bdb;font-weight:700;font-size:1.05rem;margin-bottom:12px">Ý nghĩa các sao &amp; Lục Diệu</div>`;
+    LD.forEach(name=>{
+      const m=LD_MEANING[name];
+      const st=LD_STATUS[name];
+      const cls=st==="xau"?"xau":"";
+      html+=`<div class="sao-item ${cls}">
+        <h4>${name}</h4>
+        <div class="sub">${m.title}</div>
+        <div class="desc">${m.desc}</div>
+      </div>`;
+    });
+    document.getElementById("lookupBody").innerHTML=html;
+  }
+}
+
 function setPage(p){
   view=p;
   document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
   document.getElementById("page-"+p).classList.add("active");
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
-  const labels={ day:"LỊCH BẢN", week:"Tuần", month:"Tháng", year:"Năm", lookup:"Tra cứu" };
+  const labels={day:"LỊCH BẢN",week:"Tuần",month:"Tháng",year:"Năm",lookup:"Tra cứu"};
   document.getElementById("headerTitle").textContent=labels[p]||"LỊCH BẢN";
 }
 function render(){
@@ -625,7 +686,6 @@ function render(){
   }catch(e){console.error(e);}
 }
 
-/* ===== SỰ KIỆN ===== */
 document.querySelectorAll(".nav button").forEach(b=>{
   b.addEventListener("click",()=>{
     setPage(b.dataset.page);
